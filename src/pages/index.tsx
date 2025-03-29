@@ -112,30 +112,21 @@ export default function Home() {
               <h2 className="section-title">Notícias</h2>
               <div className={styles.newsGrid}>
                 <div className={styles.newsCard}>
-                  <Image src="/tribos2.jpeg" alt="Evento de Batizado" className={styles.newsImage} width={400} height={200} />
+                  <Image src="/trocacordas.jpeg" alt="Evento de Batizado" className={styles.newsImage} width={400} height={200} />
                   <div className={styles.newsContent}>
                     <div className={styles.newsDate}>15 de Março de 2024</div>
                     <h3 className={styles.newsTitle}>Batizado e Troca de Cordas 2024</h3>
-                    <p className={styles.newsExcerpt}>Nosso evento anual de Batizado e Troca de Cordas acontecerá nos dias 20 e 21 de Abril. Contaremos com a presença de mestres renomados e muitas atividades.</p>
-                    <a href="#" className={styles.newsLink}>Leia mais</a>
+                    <p className={styles.newsExcerpt}>Nosso evento anual de Batizado e Troca de Cordas ocorreu em dezembro, e foi um sucesso. Agradecemos a todos que participaram e contribuíram para este evento incrível.</p>
+                    <a href="/noticias/batizado-troca-cordas-2024" className={styles.newsLink}>Leia mais</a>
                   </div>
                 </div>
                 <div className={styles.newsCard}>
-                  <Image src="/mestres.jpeg" alt="Workshop de Capoeira" className={styles.newsImage} width={400} height={200} />
+                  <Image src="/mestres.jpeg" alt="Nossos Mestres" className={styles.newsImage} width={400} height={200} />
                   <div className={styles.newsContent}>
                     <div className={styles.newsDate}>10 de Fevereiro de 2024</div>
-                    <h3 className={styles.newsTitle}>Workshop Internacional</h3>
-                    <p className={styles.newsExcerpt}>Workshop com mestres internacionais foi um sucesso! Agradecemos a todos que participaram e contribuíram para este evento incrível.</p>
-                    <a href="#" className={styles.newsLink}>Leia mais</a>
-                  </div>
-                </div>
-                <div className={styles.newsCard}>
-                  <Image src="/triboskids.jpeg" alt="Capoeira Kids" className={styles.newsImage} width={400} height={200} />
-                  <div className={styles.newsContent}>
-                    <div className={styles.newsDate}>5 de Janeiro de 2024</div>
-                    <h3 className={styles.newsTitle}>Novas Turmas de Capoeira Kids</h3>
-                    <p className={styles.newsExcerpt}>Estamos com novas turmas de Capoeira Kids para crianças de 4 a 12 anos. Traga seu filho para conhecer os benefícios da capoeira!</p>
-                    <a href="#" className={styles.newsLink}>Leia mais</a>
+                    <h3 className={styles.newsTitle}>Nossos Mestres</h3>
+                    <p className={styles.newsExcerpt}>Workshop com mestres Nacionais e Internacionais foi um sucesso! Agradecemos a todos que participaram e contribuíram para este evento incrível.</p>
+                    <a href="/noticias/workshop-mestres" className={styles.newsLink}>Leia mais</a>
                   </div>
                 </div>
               </div>
