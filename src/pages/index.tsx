@@ -2,10 +2,14 @@ import Head from "next/head";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import styles from "@/styles/Home.module.css";
+import Link from "next/link";
 
 export default function Home() {
   const [menuActive, setMenuActive] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [hoverCard1, setHoverCard1] = useState(false);
+  const [hoverCard2, setHoverCard2] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(0);
 
   const toggleMenu = () => {
     setMenuActive(!menuActive);
@@ -20,11 +24,28 @@ export default function Home() {
       }
     };
 
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    // Inicializar o windowWidth
+    setWindowWidth(window.innerWidth);
+
     window.addEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleResize);
+    
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  // Função para determinar a altura da imagem com base no tamanho da tela
+  const getImageHeight = () => {
+    if (windowWidth < 576) return '250px';
+    if (windowWidth < 768) return '300px';
+    return '400px';
+  };
 
   return (
     <>
@@ -111,8 +132,24 @@ export default function Home() {
             <div className="container">
               <h2 className="section-title">Notícias</h2>
               <div className={styles.newsGrid}>
-                <div className={styles.newsCard}>
-                  <Image src="/trocacordas.jpeg" alt="Evento de Batizado" className={styles.newsImage} width={400} height={200} />
+                <div 
+                  className={styles.newsCard} 
+                  onMouseEnter={() => setHoverCard1(true)}
+                  onMouseLeave={() => setHoverCard1(false)}
+                >
+                  <div className={styles.newsImageContainer}>
+                    <Image 
+                      src="/trocacordas.jpeg" 
+                      alt="Batizado e Troca de Cordas" 
+                      fill
+                      priority
+                      sizes="(max-width: 768px) 100vw, 600px"
+                      className={styles.newsImage}
+                      style={{
+                        transform: hoverCard1 ? 'scale(1.05)' : 'scale(1)'
+                      }}
+                    />
+                  </div>
                   <div className={styles.newsContent}>
                     <div className={styles.newsDate}>15 de Março de 2024</div>
                     <h3 className={styles.newsTitle}>Batizado e Troca de Cordas 2024</h3>
@@ -120,8 +157,25 @@ export default function Home() {
                     <a href="/noticias/batizado-troca-cordas-2024" className={styles.newsLink}>Leia mais</a>
                   </div>
                 </div>
-                <div className={styles.newsCard}>
-                  <Image src="/mestres.jpeg" alt="Nossos Mestres" className={styles.newsImage} width={400} height={200} />
+                <div 
+                  className={styles.newsCard}
+                  onMouseEnter={() => setHoverCard2(true)}
+                  onMouseLeave={() => setHoverCard2(false)}
+                >
+                  <div className={styles.newsImageContainer}>
+                    <Image 
+                      src="/mestres_touro.jpeg" 
+                      alt="Mestres com Touro" 
+                      fill
+                      priority
+                      sizes="(max-width: 768px) 100vw, 600px"
+                      className={styles.newsImage}
+                      style={{
+                        objectPosition: '50% 30%',
+                        transform: hoverCard2 ? 'scale(1.05)' : 'scale(1)'
+                      }}
+                    />
+                  </div>
                   <div className={styles.newsContent}>
                     <div className={styles.newsDate}>10 de Fevereiro de 2024</div>
                     <h3 className={styles.newsTitle}>Nossos Mestres</h3>
@@ -138,42 +192,47 @@ export default function Home() {
             <div className="container">
               <h2 className="section-title">Galeria</h2>
               <div className={styles.galleryGrid}>
-                <div className={styles.galleryItem}>
+                <Link href="/galeria" className={styles.galleryItem}>
                   <Image src="/tribos.jpeg" alt="Roda de Capoeira" className={styles.galleryImage} width={300} height={250} />
                   <div className={styles.galleryOverlay}>
                     <span className={styles.galleryIcon}>+</span>
                   </div>
-                </div>
-                <div className={styles.galleryItem}>
+                </Link>
+                <Link href="/galeria" className={styles.galleryItem}>
                   <Image src="/tribos2.jpeg" alt="Apresentação" className={styles.galleryImage} width={300} height={250} />
                   <div className={styles.galleryOverlay}>
                     <span className={styles.galleryIcon}>+</span>
                   </div>
-                </div>
-                <div className={styles.galleryItem}>
+                </Link>
+                <Link href="/galeria" className={styles.galleryItem}>
                   <Image src="/mestrandotyson.jpeg" alt="Mestrando Tyson" className={styles.galleryImage} width={300} height={250} />
                   <div className={styles.galleryOverlay}>
                     <span className={styles.galleryIcon}>+</span>
                   </div>
-                </div>
-                <div className={styles.galleryItem}>
-                  <Image src="/mestres.jpeg" alt="Mestres" className={styles.galleryImage} width={300} height={250} />
+                </Link>
+                <Link href="/galeria" className={styles.galleryItem}>
+                  <Image src="/canhoto.jpeg" alt="Mestre Canhoto" className={styles.galleryImage} width={300} height={250} />
                   <div className={styles.galleryOverlay}>
                     <span className={styles.galleryIcon}>+</span>
                   </div>
-                </div>
-                <div className={styles.galleryItem}>
-                  <Image src="/triboskids.jpeg" alt="Capoeira Kids" className={styles.galleryImage} width={300} height={250} />
+                </Link>
+                <Link href="/galeria" className={styles.galleryItem}>
+                  <Image src="/mestres_touro.jpeg" alt="Mestres com Touro" className={styles.galleryImage} width={300} height={250} />
                   <div className={styles.galleryOverlay}>
                     <span className={styles.galleryIcon}>+</span>
                   </div>
-                </div>
-                <div className={styles.galleryItem}>
-                  <Image src="/tribos.jpeg" alt="Evento" className={styles.galleryImage} width={300} height={250} />
+                </Link>
+                <Link href="/galeria" className={styles.galleryItem}>
+                  <Image src="/evento.jpeg" alt="Evento Especial" className={styles.galleryImage} width={300} height={250} />
                   <div className={styles.galleryOverlay}>
                     <span className={styles.galleryIcon}>+</span>
                   </div>
-                </div>
+                </Link>
+              </div>
+              <div className="text-center" style={{ marginTop: '30px' }}>
+                <Link href="/galeria" className={styles.heroButton}>
+                  Ver Galeria Completa
+                </Link>
               </div>
             </div>
           </section>
@@ -181,22 +240,17 @@ export default function Home() {
           {/* Instagram */}
           <section className={`${styles.instagram} section`}>
             <div className="container">
-              <h2 className="section-title">Siga-nos no Instagram</h2>
+              <h2 className="section-title">Instagram</h2>
               <div className={styles.instagramContent}>
                 <div className={styles.instagramIcon}>
                   <i className="fab fa-instagram"></i>
                 </div>
-                <h3 className={styles.instagramHandle}>@tribos_capoeiraoficial</h3>
-                <p className={styles.instagramText}>Acompanhe nosso dia a dia, eventos e novidades!</p>
-                <a 
-                  href="https://www.instagram.com/tribos_capoeiraoficial/" 
-              target="_blank"
-              rel="noopener noreferrer"
-                  className={styles.instagramButton}
-            >
+                <div className={styles.instagramHandle}>@tribos_capoeiraoficial</div>
+                <p className={styles.instagramText}>Siga nosso perfil oficial no Instagram para ficar por dentro das novidades, eventos e do dia a dia do Grupo Tribos Capoeira.</p>
+                <a href="https://www.instagram.com/tribos_capoeiraoficial/" target="_blank" rel="noopener noreferrer" className={styles.instagramButton}>
                   Seguir
-            </a>
-          </div>
+                </a>
+              </div>
             </div>
           </section>
 
@@ -207,40 +261,32 @@ export default function Home() {
               <div className={styles.contactContent}>
                 <div className={styles.contactInfo}>
                   <div className={styles.contactInfoItem}>
-                    <span className={styles.contactIcon}><i className="fas fa-map-marker-alt"></i></span>
+                    <div className={styles.contactIcon}>
+                      <i className="fas fa-map-marker-alt"></i>
+                    </div>
                     <div>
-                      <h3>Endereço</h3>
-                      <p>Rua da Capoeira, 123 - Centro</p>
-                      <p>São Paulo - SP, 01234-567</p>
+                      <h3>Onde Estamos</h3>
+                      <p>Endereço - QR 314, S/N Conjunto 8 Loja 2<br />Samambaia Sul<br />Brasília - DF</p>
                     </div>
                   </div>
                   <div className={styles.contactInfoItem}>
-                    <span className={styles.contactIcon}><i className="fas fa-phone-alt"></i></span>
+                    <div className={styles.contactIcon}>
+                      <i className="fas fa-phone"></i>
+                    </div>
                     <div>
                       <h3>Telefone</h3>
-                      <p>(11) 98765-4321</p>
+                      <p><a href="tel:+5561912345678">(61) 91234-5678</a></p>
                     </div>
                   </div>
                   <div className={styles.contactInfoItem}>
-                    <span className={styles.contactIcon}><i className="fas fa-envelope"></i></span>
+                    <div className={styles.contactIcon}>
+                      <i className="fas fa-envelope"></i>
+                    </div>
                     <div>
                       <h3>E-mail</h3>
-                      <p>contato@triboscapoeira.com.br</p>
-                    </div>
-                  </div>
-                  <div className={styles.contactInfoItem}>
-                    <span className={styles.contactIcon}><i className="fas fa-clock"></i></span>
-                    <div>
-                      <h3>Horário de Funcionamento</h3>
-                      <p>Segunda a Sexta: 9h às 21h</p>
-                      <p>Sábado: 9h às 14h</p>
-                    </div>
-                  </div>
-                  <div className={styles.contactInfoItem}>
-                    <span className={styles.contactIcon}><i className="fab fa-instagram"></i></span>
-                    <div>
-                      <h3>Instagram</h3>
-                      <p><a href="https://www.instagram.com/tribos_capoeiraoficial/" target="_blank" rel="noopener noreferrer">@tribos_capoeiraoficial</a></p>
+                      <p><a href="mailto:triboscapoeiraoficial@gmail.com
+">triboscapoeiraoficial@gmail.com
+                      </a></p>
                     </div>
                   </div>
                 </div>

@@ -41,16 +41,18 @@ export default function BatizadoTrocaCordas() {
         <header className={`${styles.header} ${scrolled ? styles.scrolled : ''}`}>
           <div className={`container ${styles.navbar}`}>
             <div className={styles.logo}>
-              <div className={styles.logoImageWrapper}>
-                <Image
-                  src="/logo-tribos.png" 
-                  alt="Tribos Capoeira Logo" 
-                  width={80} 
-                  height={80} 
-                  priority
-                  className={styles.logoImage}
-                />
-              </div>
+              <Link href="/" title="Voltar para a página inicial">
+                <div className={styles.logoImageWrapper}>
+                  <Image
+                    src="/logo-tribos.png" 
+                    alt="Tribos Capoeira Logo" 
+                    width={80} 
+                    height={80} 
+                    priority
+                    className={styles.logoImage}
+                  />
+                </div>
+              </Link>
             </div>
             <button className={styles.menuButton} onClick={toggleMenu}>
               <i className="fas fa-bars"></i>
@@ -133,11 +135,32 @@ export default function BatizadoTrocaCordas() {
                   <a href="#" className={styles.socialIcon}>
                     <i className="fab fa-twitter"></i>
                   </a>
-                  <a href="#" className={styles.socialIcon}>
+                  <a href="https://www.instagram.com/tribos_capoeiraoficial/" target="_blank" rel="noopener noreferrer" className={`${styles.socialIcon} ${styles.instagram}`}>
                     <i className="fab fa-instagram"></i>
                   </a>
                   <a href="#" className={styles.socialIcon}>
                     <i className="fab fa-whatsapp"></i>
+                  </a>
+                </div>
+              </div>
+              
+              <div className={styles.newsUnidades}>
+                <h3>Nossas Unidades:</h3>
+                <div className={styles.unidadesLinks}>
+                  <a href="https://www.instagram.com/tribos_capoeiraoficial/" target="_blank" rel="noopener noreferrer">
+                    <i className="fab fa-instagram"></i> @tribos_capoeiraoficial
+                  </a>
+                  <a href="https://www.instagram.com/triboscapoeirarj/" target="_blank" rel="noopener noreferrer">
+                    <i className="fab fa-instagram"></i> @triboscapoeirarj
+                  </a>
+                  <a href="https://www.instagram.com/triboscapoeirapara/" target="_blank" rel="noopener noreferrer">
+                    <i className="fab fa-instagram"></i> @triboscapoeirapara
+                  </a>
+                  <a href="https://www.instagram.com/triboscapoeira_dourados/" target="_blank" rel="noopener noreferrer">
+                    <i className="fab fa-instagram"></i> @triboscapoeira_dourados
+                  </a>
+                  <a href="https://www.instagram.com/tribos_capoeira_ao/" target="_blank" rel="noopener noreferrer">
+                    <i className="fab fa-instagram"></i> @tribos_capoeira_ao
                   </a>
                 </div>
               </div>
