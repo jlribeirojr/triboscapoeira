@@ -60,35 +60,39 @@ p {
 }
 
 .container {
-  max-width: var(--max-width);
+  width: 100%;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
 }
 
 .section {
-  padding: 80px 0;
+  padding: 60px 0;
 }
 
 .section-title {
-  font-size: 2.5rem;
   text-align: center;
-  margin-bottom: 50px;
-  color: var(--primary-color);
+  font-size: 2.2rem;
+  color: var(--accent-color);
+  margin-bottom: 30px;
   position: relative;
-  font-family: var(--font-heading);
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  padding-bottom: 15px;
 }
 
-.section-title::after {
+#galeria .section-title {
+  margin-bottom: 20px;
+  padding-top: 10px;
+}
+
+.section-title:after {
   content: '';
   position: absolute;
-  bottom: -15px;
+  bottom: 0;
   left: 50%;
   transform: translateX(-50%);
   width: 80px;
-  height: 4px;
-  background-color: var(--secondary-color);
+  height: 3px;
+  background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
 }
 
 @media (max-width: 768px) {
