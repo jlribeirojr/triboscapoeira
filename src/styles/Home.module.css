@@ -544,13 +544,18 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
   transition: opacity 0.3s;
   z-index: 2;
+  padding: 20px;
+  text-align: center;
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 500;
 }
 
 .galleryItem:hover .galleryOverlay {
@@ -1222,4 +1227,12 @@
     right: 0;
     font-size: 1.8rem;
   }
+}
+
+.modalTitle {
+  color: #fff;
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+  padding: 0 20px;
 }

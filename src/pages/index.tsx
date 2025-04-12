@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import styles from "@/styles/Home.module.css";
 import Link from "next/link";
-import { getConfiguracao, getQuemSomosInfo, getContatoInfo } from "@/services/cosmicService";
+import { getConfiguracao, getQuemSomosInfo, getContatoInfo, getGaleriaImages } from "@/services/cosmicService";
 
 // Definindo tipos para os dados do CMS
 interface ConfigData {
@@ -29,6 +29,13 @@ interface ContatoData {
   endereco?: string;
 }
 
+interface GaleriaItem {
+  url?: string;
+  imgix_url?: string;
+  titulo?: string;
+  descricao?: string;
+}
+
 export default function Home() {
   const [menuActive, setMenuActive] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -36,11 +43,13 @@ export default function Home() {
   const [hoverCard2, setHoverCard2] = useState(false);
   const [windowWidth, setWindowWidth] = useState(0);
   const [imagemSelecionada, setImagemSelecionada] = useState<string | null>(null);
+  const [tituloSelecionado, setTituloSelecionado] = useState<string | null>(null);
   
   // Estado para dados do CMS com tipos corretos
   const [configData, setConfigData] = useState<ConfigData | null>(null);
   const [quemSomosData, setQuemSomosData] = useState<QuemSomosData | null>(null);
   const [contatoData, setContatoData] = useState<ContatoData | null>(null);
+  const [galeriaImages, setGaleriaImages] = useState<GaleriaItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [fundoUrl, setFundoUrl] = useState<string | null>(null);
 
@@ -81,11 +90,13 @@ export default function Home() {
         const config = await getConfiguracao() as ConfigData;
         const quemSomos = await getQuemSomosInfo() as QuemSomosData;
         const contato = await getContatoInfo() as ContatoData;
+        const galeria = await getGaleriaImages() as GaleriaItem[];
         
         // Atualizar estados com o tipo correto
         setConfigData(config || null);
         setQuemSomosData(quemSomos || null);
         setContatoData(contato || null);
+        setGaleriaImages(galeria || []);
         
         // Verificar e atualizar URL da imagem de fundo
         if (config?.metadata?.imagem_fundo?.imgix_url) {
@@ -125,8 +136,9 @@ export default function Home() {
   };
 
   // Função para abrir o modal com a imagem selecionada
-  const abrirModal = (src: string) => {
+  const abrirModal = (src: string, titulo?: string) => {
     setImagemSelecionada(src);
+    setTituloSelecionado(titulo || null);
     // Impedir a rolagem da página quando o modal estiver aberto
     document.body.style.overflow = 'hidden';
   };
@@ -134,6 +146,7 @@ export default function Home() {
   // Função para fechar o modal
   const fecharModal = () => {
     setImagemSelecionada(null);
+    setTituloSelecionado(null);
     // Reativar a rolagem da página
     document.body.style.overflow = 'auto';
   };
@@ -144,6 +157,124 @@ export default function Home() {
     className: styles.heroDynamic
   } : {
     className: styles.hero
+  };
+
+  // Renderiza as imagens da galeria do Cosmic ou usa as imagens padrão
+  const renderGaleriaItems = () => {
+    if (galeriaImages && galeriaImages.length > 0) {
+      // Limitar para mostrar apenas as primeiras 6 imagens na página inicial
+      return galeriaImages.slice(0, 6).map((item, index) => {
+        const imageUrl = item.imgix_url || item.url || '';
+        const titulo = item.titulo || `Imagem ${index + 1}`;
+        
+        return (
+          <div className={styles.galleryItem} key={index} onClick={() => abrirModal(imageUrl, titulo)}>
+            <Image
+              src={imageUrl}
+              alt={titulo}
+              className={styles.galleryImage}
+              fill
+              sizes="(max-width: 768px) 100vw, 33vw"
+              priority
+              quality={100}
+            />
+            <div className={styles.galleryOverlay}>
+              <span>{titulo}</span>
+            </div>
+          </div>
+        );
+      });
+    } else {
+      // Fallback para as imagens estáticas se não houver imagens no Cosmic
+      return (
+        <>
+          <div className={styles.galleryItem} onClick={() => abrirModal("/tribos.jpeg", "Grupo Tribos Capoeira em Angola")}>
+            <Image
+              src="/tribos.jpeg"
+              alt="Grupo Tribos Capoeira em Angola"
+              className={styles.galleryImage}
+              fill
+              sizes="(max-width: 768px) 100vw, 33vw"
+              priority
+              quality={100}
+            />
+            <div className={styles.galleryOverlay}>
+              <span>Grupo Tribos Capoeira em Angola</span>
+            </div>
+          </div>
+          <div className={styles.galleryItem} onClick={() => abrirModal("/tribos2.jpeg", "Apresentação de Capoeira do Grupo Tribos")}>
+            <Image
+              src="/tribos2.jpeg"
+              alt="Apresentação de Capoeira do Grupo Tribos"
+              className={styles.galleryImage}
+              fill
+              sizes="(max-width: 768px) 100vw, 33vw"
+              priority
+              quality={100}
+            />
+            <div className={styles.galleryOverlay}>
+              <span>Apresentação de Capoeira do Grupo Tribos</span>
+            </div>
+          </div>
+          <div className={styles.galleryItem} onClick={() => abrirModal("/mestrandotyson.jpeg", "Mestrando Tyson")}>
+            <Image
+              src="/mestrandotyson.jpeg"
+              alt="Mestrando Tyson"
+              className={styles.galleryImage}
+              fill
+              sizes="(max-width: 768px) 100vw, 33vw"
+              priority
+              quality={100}
+            />
+            <div className={styles.galleryOverlay}>
+              <span className={styles.galleryIcon}>+</span>
+            </div>
+          </div>
+          <div className={styles.galleryItem} onClick={() => abrirModal("/graduacao.jpeg", "Cerimônia de Graduação e Entrega de Cordas")}>
+            <Image
+              src="/graduacao.jpeg"
+              alt="Cerimônia de Graduação e Entrega de Cordas"
+              className={styles.galleryImage}
+              fill
+              sizes="(max-width: 768px) 100vw, 33vw"
+              priority
+              quality={100}
+            />
+            <div className={styles.galleryOverlay}>
+              <span>Cerimônia de Graduação e Entrega de Cordas</span>
+            </div>
+          </div>
+          <div className={styles.galleryItem} onClick={() => abrirModal("/triboskids.jpeg", "Tribos Kids - Aula de Capoeira para Crianças")}>
+            <Image
+              src="/triboskids.jpeg"
+              alt="Tribos Kids - Aula de Capoeira para Crianças"
+              className={styles.galleryImage}
+              fill
+              sizes="(max-width: 768px) 100vw, 33vw"
+              priority
+              quality={100}
+            />
+            <div className={styles.galleryOverlay}>
+              <span>Tribos Kids - Aula de Capoeira para Crianças</span>
+            </div>
+          </div>
+          <div className={styles.galleryItem} onClick={() => abrirModal("/evento.jpeg", "Evento de Integração do Grupo Tribos Capoeira")}>
+            <Image
+              src="/evento.jpeg"
+              alt="Evento de Integração do Grupo Tribos Capoeira"
+              className={styles.galleryImage}
+              fill
+              sizes="(max-width: 768px) 100vw, 33vw"
+              priority
+              quality={100}
+            />
+            <div className={styles.galleryOverlay}>
+              <span>Evento de Integração do Grupo Tribos Capoeira</span>
+            </div>
+          </div>
+        </>
+      );
+    }
   };
 
   return (
@@ -387,90 +518,7 @@ export default function Home() {
             <div className="container">
               <h2 className="section-title">Galeria</h2>
               <div className={styles.galleryGrid}>
-                <div className={styles.galleryItem} onClick={() => abrirModal("/tribos.jpeg")}>
-                  <Image
-                    src="/tribos.jpeg"
-                    alt="Roda de Capoeira"
-                    className={styles.galleryImage}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    priority
-                    quality={100}
-                  />
-                  <div className={styles.galleryOverlay}>
-                    <span className={styles.galleryIcon}>+</span>
-                  </div>
-                </div>
-                <div className={styles.galleryItem} onClick={() => abrirModal("/tribos2.jpeg")}>
-                  <Image
-                    src="/tribos2.jpeg"
-                    alt="Apresentação"
-                    className={styles.galleryImage}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    priority
-                    quality={100}
-                  />
-                  <div className={styles.galleryOverlay}>
-                    <span className={styles.galleryIcon}>+</span>
-                  </div>
-                </div>
-                <div className={styles.galleryItem} onClick={() => abrirModal("/mestrandotyson.jpeg")}>
-                  <Image
-                    src="/mestrandotyson.jpeg"
-                    alt="Mestrando Tyson"
-                    className={styles.galleryImage}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    priority
-                    quality={100}
-                  />
-                  <div className={styles.galleryOverlay}>
-                    <span className={styles.galleryIcon}>+</span>
-                  </div>
-                </div>
-                <div className={styles.galleryItem} onClick={() => abrirModal("/graduacao.jpeg")}>
-                  <Image
-                    src="/graduacao.jpeg"
-                    alt="Graduação de Capoeira"
-                    className={styles.galleryImage}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    priority
-                    quality={100}
-                  />
-                  <div className={styles.galleryOverlay}>
-                    <span className={styles.galleryIcon}>+</span>
-                  </div>
-                </div>
-                <div className={styles.galleryItem} onClick={() => abrirModal("/triboskids.jpeg")}>
-                  <Image
-                    src="/triboskids.jpeg"
-                    alt="Tribos Kids"
-                    className={styles.galleryImage}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    priority
-                    quality={100}
-                  />
-                  <div className={styles.galleryOverlay}>
-                    <span className={styles.galleryIcon}>+</span>
-                  </div>
-                </div>
-                <div className={styles.galleryItem} onClick={() => abrirModal("/evento.jpeg")}>
-                  <Image
-                    src="/evento.jpeg"
-                    alt="Evento Especial"
-                    className={styles.galleryImage}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    priority
-                    quality={100}
-                  />
-                  <div className={styles.galleryOverlay}>
-                    <span className={styles.galleryIcon}>+</span>
-                  </div>
-                </div>
+                {renderGaleriaItems()}
               </div>
               <div className={styles.verMais}>
                 <Link href="/galeria" className={styles.btnVerMais}>
@@ -710,10 +758,11 @@ export default function Home() {
         <div className={styles.modal} onClick={fecharModal}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <span className={styles.fecharModal} onClick={fecharModal}>&times;</span>
+            {tituloSelecionado && <h3 className={styles.modalTitle}>{tituloSelecionado}</h3>}
             <div className={styles.modalImageContainer}>
               <Image
                 src={imagemSelecionada}
-                alt="Imagem ampliada"
+                alt={tituloSelecionado || "Imagem ampliada"}
                 fill
                 className={styles.modalImage}
                 sizes="(max-width: 768px) 100vw, 80vw"

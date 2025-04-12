@@ -70,6 +70,19 @@
   padding: 5px;
 }
 
+.logoLink {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.logoLink:hover {
+  color: #e63946;
+}
+
 .navLinks {
   display: flex;
   list-style: none;
@@ -319,14 +332,15 @@
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.8);
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
-  backdrop-filter: blur(5px);
+  z-index: 2000;
+  padding: 20px;
+  touch-action: manipulation;
 }
 
 .modalContent {
@@ -334,39 +348,48 @@
   width: 90%;
   max-width: 1200px;
   max-height: 90vh;
-  margin: auto;
-  border-radius: 8px;
-  background-color: white;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px 0;
 }
 
 .fecharModal {
   position: absolute;
-  top: 15px;
-  right: 15px;
-  font-size: 30px;
+  top: -40px;
+  right: -20px;
   color: white;
+  font-size: 30px;
   cursor: pointer;
-  z-index: 1010;
-  text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-  width: 40px;
-  height: 40px;
-  background: rgba(0, 0, 0, 0.5);
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  line-height: 1;
+  z-index: 2001;
+}
+
+.modalTitle {
+  color: white;
+  margin-bottom: 10px;
+  font-size: 24px;
+  text-align: center;
+}
+
+.modalDescricao {
+  color: #ccc;
+  margin-bottom: 20px;
+  text-align: center;
+  max-width: 800px;
+  font-size: 16px;
 }
 
 .modalImageContainer {
   position: relative;
   width: 100%;
-  height: 80vh;
+  height: 70vh;
+  border-radius: 5px;
+  overflow: hidden;
 }
 
 .modalImage {
   object-fit: contain;
+  border-radius: 5px;
 }
 
 .atualizarContainer {
@@ -390,8 +413,10 @@
 }
 
 .btnAtualizar:disabled {
-  background-color: #cccccc;
+  background-color: #999;
   cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
 }
 
 /* Estilos responsivos */
@@ -1276,4 +1301,460 @@
   margin-top: 5px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+}
+
+.pageTitle {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+  font-size: 2.5rem;
+}
+
+.galeriaControles {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.btnVoltar {
+  display: inline-block;
+  padding: 12px 25px;
+  border-radius: 5px;
+  font-weight: bold;
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.3s ease;
+  background-color: #e63946;
+  color: white;
+}
+
+.btnVoltar:hover {
+  background-color: #c1121f;
+  transform: translateY(-2px);
+}
+
+.btnAtualizar {
+  display: inline-block;
+  padding: 12px 25px;
+  border-radius: 5px;
+  font-weight: bold;
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.3s ease;
+  background-color: #e63946;
+  color: white;
+}
+
+.btnAtualizar:hover {
+  background-color: #c1121f;
+  transform: translateY(-2px);
+}
+
+.galeriaGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.galeriaItem {
+  position: relative;
+  height: 300px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.galeriaItem:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.galeriaImage {
+  object-fit: cover;
+  border-radius: 10px;
+  transition: transform 0.5s ease;
+}
+
+.galeriaItem:hover .galeriaImage {
+  transform: scale(1.05);
+}
+
+.galeriaOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  color: white;
+  padding: 20px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.galeriaItem:hover .galeriaOverlay {
+  opacity: 1;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  font-size: 18px;
+  color: #666;
+}
+
+.noImages {
+  text-align: center;
+  padding: 40px;
+  font-size: 1.2rem;
+  color: #666;
+  background-color: #f8f8f8;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 30px auto;
+  max-width: 600px;
+  border: 1px solid #eee;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  font-size: 1.2rem;
+  color: #666;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  min-height: 300px;
+}
+
+.loading::after {
+  content: '';
+  width: 50px;
+  height: 50px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #e32119;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Modal */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  padding: 20px;
+}
+
+.modalContent {
+  position: relative;
+  width: 90%;
+  max-width: 1200px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fecharModal {
+  position: absolute;
+  top: -40px;
+  right: -20px;
+  color: white;
+  font-size: 30px;
+  cursor: pointer;
+  z-index: 2001;
+}
+
+.modalTitle {
+  color: white;
+  margin-bottom: 10px;
+  font-size: 24px;
+  text-align: center;
+}
+
+.modalDescricao {
+  color: #ccc;
+  margin-bottom: 20px;
+  text-align: center;
+  max-width: 800px;
+  font-size: 16px;
+}
+
+.modalImageContainer {
+  position: relative;
+  width: 100%;
+  height: 70vh;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.modalImage {
+  object-fit: contain;
+  border-radius: 5px;
+}
+
+/* Footer */
+.footer {
+  background-color: #333;
+  color: white;
+  padding: 50px 0 20px;
+}
+
+.footerContent {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.footerTitle {
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+.footerLinks {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footerLinks li {
+  margin-bottom: 10px;
+}
+
+.footerLinks a {
+  color: #ccc;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.footerLinks a:hover {
+  color: #e63946;
+}
+
+.socialLinks {
+  display: flex;
+  gap: 15px;
+}
+
+.socialIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #444;
+  color: white;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.socialIcon:hover {
+  transform: translateY(-3px);
+}
+
+.socialIcon.instagram:hover {
+  background: linear-gradient(135deg, #405de6, #5851db, #833ab4, #c13584, #e1306c, #fd1d1d);
+}
+
+.copyright {
+  text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid #444;
+  color: #888;
+  font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .galeriaGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .menuButton {
+    display: block;
+  }
+
+  .navLinks {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.95);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 1;
+  }
+
+  .navLinks.active {
+    transform: translateX(0);
+  }
+
+  .navLinks li {
+    margin: 15px 0;
+  }
+
+  .navLinks a {
+    font-size: 20px;
+  }
+
+  .footerContent {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .galeriaControles {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .btnVoltar, .btnAtualizar {
+    width: 100%;
+  }
+
+  .modalImageContainer {
+    height: 50vh;
+  }
+}
+
+@media (max-width: 576px) {
+  .galeriaGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .galeriaItem {
+    height: 250px;
+  }
+
+  .pageTitle {
+    font-size: 2rem;
+  }
+}
+
+.galeriaInfo {
+  text-align: center;
+  margin-top: 20px;
+  color: #666;
+  padding: 10px;
+  font-size: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.dica {
+  position: absolute;
+  top: -30px;
+  left: 0;
+  color: #ccc;
+  font-size: 14px;
+  text-align: center;
+  width: 100%;
+}
+
+.modalNavButtons {
+  position: absolute;
+  width: 100%;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
+  z-index: 2;
+}
+
+.navButton {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.navButton:hover {
+  background-color: rgba(230, 57, 70, 0.8);
+  transform: scale(1.1);
+}
+
+.navButton:focus {
+  outline: none;
+}
+
+.prevButton {
+  margin-right: auto;
+}
+
+.nextButton {
+  margin-left: auto;
+}
+
+.modalCounter {
+  position: absolute;
+  bottom: -30px;
+  width: 100%;
+  text-align: center;
+  color: #ccc;
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .navButton {
+    width: 35px;
+    height: 35px;
+    font-size: 18px;
+  }
+  
+  .dica {
+    display: none;
+  }
+  
+  .fecharModal {
+    top: -30px;
+    right: 0;
+    font-size: 24px;
+  }
+  
+  .modalTitle {
+    font-size: 18px;
+    margin-bottom: 5px;
+  }
+  
+  .modalDescricao {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  
+  .modalImageContainer {
+    height: 40vh;
+  }
 } 

@@ -11,46 +11,40 @@ const API_URL = `https://api.cosmicjs.com/v3/buckets/${BUCKET_SLUG}`;
  */
 const IMAGENS_ESTATICAS = [
   {
-    id: "estatica-1",
     url: "/tribos.jpeg",
     imgix_url: "/tribos.jpeg",
-    titulo: "Roda de Capoeira",
-    descricao: "Roda de capoeira do grupo Tribos"
+    titulo: "Grupo Tribos Capoeira em Angola",
+    descricao: "Alunos e professores do Grupo Tribos Capoeira em Angola"
   },
   {
-    id: "estatica-2",
     url: "/tribos2.jpeg",
     imgix_url: "/tribos2.jpeg",
-    titulo: "Apresentação de Capoeira",
-    descricao: "Apresentação de capoeira do grupo Tribos"
+    titulo: "Apresentação de Capoeira do Grupo Tribos",
+    descricao: "Roda de capoeira durante evento do Grupo Tribos"
   },
   {
-    id: "estatica-3",
     url: "/mestrandotyson.jpeg",
     imgix_url: "/mestrandotyson.jpeg",
     titulo: "Mestrando Tyson",
-    descricao: "Mestrando Tyson do grupo Tribos Capoeira"
+    descricao: "Mestrando Tyson em evento do Grupo Tribos Capoeira"
   },
   {
-    id: "estatica-4",
     url: "/graduacao.jpeg",
     imgix_url: "/graduacao.jpeg",
-    titulo: "Graduação de Capoeira",
-    descricao: "Evento de graduação do grupo Tribos Capoeira"
+    titulo: "Cerimônia de Graduação e Entrega de Cordas",
+    descricao: "Cerimônia de entrega de cordas aos alunos do Grupo Tribos Capoeira"
   },
   {
-    id: "estatica-5",
     url: "/triboskids.jpeg",
     imgix_url: "/triboskids.jpeg",
-    titulo: "Tribos Kids",
-    descricao: "Turma infantil do grupo Tribos Capoeira"
+    titulo: "Tribos Kids - Aula de Capoeira para Crianças",
+    descricao: "Crianças durante aula de capoeira do programa Tribos Kids"
   },
   {
-    id: "estatica-6",
     url: "/evento.jpeg",
     imgix_url: "/evento.jpeg",
-    titulo: "Evento de Capoeira",
-    descricao: "Evento realizado pelo grupo Tribos Capoeira"
+    titulo: "Evento de Integração do Grupo Tribos Capoeira",
+    descricao: "Integrantes do Grupo Tribos Capoeira reunidos em evento de integração"
   },
   {
     id: "estatica-7",
@@ -232,5 +226,87 @@ export async function getNoticiasInfo() {
   } catch (error) {
     console.error('Erro ao buscar informações de notícias:', error);
     return {};
+  }
+}
+
+export async function getGaleriaImages() {
+  try {
+    const response = await fetch(
+      `https://api.cosmicjs.com/v3/buckets/triboscapoeira-production/objects/67f474e0cbb3fe972a6384d9?pretty=true&read_key=QPaf8PXfywhVJGuFWv9InKSuDZ7q2RPJzagHxDgGuXR0I0pMnA&depth=1&props=slug,title,metadata,type`
+    );
+    
+    if (!response.ok) {
+      throw new Error('Falha ao buscar imagens da galeria');
+    }
+    
+    const data = await response.json();
+    
+    // Array para armazenar as imagens do Cosmic
+    let imagensDoCosmic = [];
+    
+    // Verificar a estrutura de dados retornada pelo Cosmic
+    if (data.object && data.object.metadata) {
+      const metadata = data.object.metadata;
+      
+      // Nova estrutura: array de objetos com "imagem" e "descricao_da_foto"
+      if (metadata.imagem && Array.isArray(metadata.imagem)) {
+        imagensDoCosmic = metadata.imagem.map((item, index) => {
+          // Verificar se o item tem a estrutura correta com objeto "imagem" dentro
+          if (item.imagem && (item.imagem.url || item.imagem.imgix_url)) {
+            return {
+              url: item.imagem.url || '',
+              imgix_url: item.imagem.imgix_url || item.imagem.url || '',
+              titulo: item.descricao_da_foto || `Imagem ${index + 1}`,
+              descricao: ''
+            };
+          }
+          // Caso seja o formato antigo
+          return {
+            url: item.url || '',
+            imgix_url: item.imgix_url || item.url || '',
+            titulo: item.titulo || `Imagem ${index + 1}`,
+            descricao: item.descricao || ''
+          };
+        });
+      }
+      // Estrutura de imagem única (objeto na raiz do metadata)
+      else if (metadata.imagem && (metadata.imagem.url || metadata.imagem.imgix_url)) {
+        imagensDoCosmic = [{
+          url: metadata.imagem.url || '',
+          imgix_url: metadata.imagem.imgix_url || metadata.imagem.url || '',
+          titulo: metadata.descricao_da_foto || data.object.title || 'Imagem da Galeria',
+          descricao: ''
+        }];
+      }
+      // Estrutura antiga de galeria (se ainda existir)
+      else if (metadata.galeria && Array.isArray(metadata.galeria)) {
+        imagensDoCosmic = metadata.galeria;
+      }
+    }
+    
+    console.log(`Encontradas ${imagensDoCosmic.length} imagens no Cosmic`);
+    console.log('Imagens do Cosmic:', JSON.stringify(imagensDoCosmic));
+    
+    // Combinar com as imagens estáticas
+    const todasImagens = [
+      ...imagensDoCosmic,
+      ...IMAGENS_ESTATICAS.map(img => ({
+        url: img.url,
+        imgix_url: img.imgix_url,
+        titulo: img.titulo,
+        descricao: img.descricao
+      }))
+    ];
+    
+    return todasImagens;
+  } catch (error) {
+    console.error('Erro ao buscar imagens da galeria:', error);
+    // Em caso de erro, retornar as imagens estáticas
+    return IMAGENS_ESTATICAS.map(img => ({
+      url: img.url,
+      imgix_url: img.imgix_url,
+      titulo: img.titulo,
+      descricao: img.descricao
+    }));
   }
 } 
