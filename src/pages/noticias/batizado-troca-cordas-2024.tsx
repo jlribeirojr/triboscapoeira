@@ -1,16 +1,24 @@
+import React, { useState, useEffect } from 'react';
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect } from "react";
-import styles from "@/styles/News.module.css";
+import styles from "@/styles/Home.module.css";
+import newsStyles from "@/styles/News.module.css";
+import { FaFacebook, FaTwitter, FaInstagram, FaWhatsapp } from "react-icons/fa";
 
-export default function BatizadoTrocaCordas() {
+// Interface para os dados de notícias
+interface NewsData {
+  title: string;
+  date: string;
+  image: string;
+  content: string;
+}
+
+export default function BatizadoTrocaCordas2024() {
   const [scrolled, setScrolled] = useState(false);
   const [menuActive, setMenuActive] = useState(false);
-
-  const toggleMenu = () => {
-    setMenuActive(!menuActive);
-  };
+  const [news, setNews] = useState<NewsData | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,164 +30,182 @@ export default function BatizadoTrocaCordas() {
     };
 
     window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const toggleMenu = () => {
+    setMenuActive(!menuActive);
+  };
+
+  // Efeito para simular carregamento de dados de um CMS
+  useEffect(() => {
+    // Simular carregamento de dados de um CMS
+    setTimeout(() => {
+      setNews({
+        title: "Batizado e Troca de Cordas 2024",
+        date: "20 a 22 de Julho de 2024",
+        image: "/trocacordas.jpeg",
+        content: "Venha participar do nosso evento anual de Batizado e Troca de Cordas que acontecerá em Julho de 2024. Este é um momento especial para todos os alunos e membros do grupo Tribos Capoeira.",
+      });
+      setLoading(false);
+    }, 1000);
   }, []);
 
   return (
     <>
       <Head>
-        <title>Batizado e Troca de Cordas 2024 - Tribos Capoeira</title>
-        <meta name="description" content="Nosso evento anual de Batizado e Troca de Cordas ocorreu em dezembro, e foi um sucesso." />
+        <title>Batizado e Troca de Cordas 2024 | Tribos Capoeira</title>
+        <meta name="description" content="Evento anual de Batizado e Troca de Cordas do Grupo Tribos Capoeira, realizado em Julho de 2024." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <div className={styles.page}>
-        {/* Header */}
-        <header className={`${styles.header} ${scrolled ? styles.scrolled : ''}`}>
+        <header className={`${styles.header} ${scrolled ? styles.scrolled : ""}`}>
           <div className={`container ${styles.navbar}`}>
             <div className={styles.logo}>
-              <Link href="/" title="Voltar para a página inicial">
-                <div className={styles.logoImageWrapper}>
-                  <Image
-                    src="/logo-tribos.png" 
-                    alt="Tribos Capoeira Logo" 
-                    width={80} 
-                    height={80} 
-                    priority
-                    className={styles.logoImage}
-                  />
-                </div>
+              <Link href="/" className={styles.logoImageWrapper}>
+                <Image
+                  src="/logo-tribos.png"
+                  alt="Tribos Capoeira Logo"
+                  width={80}
+                  height={80}
+                  priority
+                  className={styles.logoImage}
+                />
               </Link>
             </div>
             <button className={styles.menuButton} onClick={toggleMenu}>
               <i className="fas fa-bars"></i>
             </button>
-            <ul className={`${styles.navLinks} ${menuActive ? styles.active : ''}`}>
-              <li><Link href="/#quem-somos" onClick={() => setMenuActive(false)}>Quem Somos</Link></li>
-              <li><Link href="/#noticias" onClick={() => setMenuActive(false)}>Notícias</Link></li>
-              <li><Link href="/#galeria" onClick={() => setMenuActive(false)}>Galeria</Link></li>
-              <li><Link href="/#contato" onClick={() => setMenuActive(false)}>Contato</Link></li>
-            </ul>
+            <nav>
+              <ul className={`${styles.navLinks} ${menuActive ? styles.active : ""}`}>
+                <li>
+                  <Link href="/">Início</Link>
+                </li>
+                <li>
+                  <Link href="/#quem-somos">Quem Somos</Link>
+                </li>
+                <li>
+                  <Link href="/#noticias">Notícias</Link>
+                </li>
+                <li>
+                  <Link href="/#galeria">Galeria</Link>
+                </li>
+                <li>
+                  <Link href="/#contato">Contato</Link>
+                </li>
+              </ul>
+            </nav>
           </div>
         </header>
 
-        <main className={styles.main}>
-          <div className={styles.newsContainer}>
-            <div className={styles.newsHeader}>
-              <h1 className={styles.newsTitle}>Batizado e Troca de Cordas 2024</h1>
-              <div className={styles.newsDate}>15 de Março de 2024</div>
-              <div className={styles.newsBreadcrumb}>
-                <Link href="/">Home</Link> / <Link href="/#noticias">Notícias</Link> / <span>Batizado e Troca de Cordas 2024</span>
+        {/* Conteúdo da Notícia */}
+        <main className={newsStyles.main}>
+          <div className={newsStyles.newsContainer}>
+            {/* Conteúdo da notícia mantido igual */}
+            <section className={newsStyles.newsSection}>
+              <div className={newsStyles.newsBreadcrumb}>
+                <Link href="/">Início</Link> &gt; <Link href="/noticias">Notícias</Link> &gt; Batizado e Troca de Cordas 2024
               </div>
-            </div>
-            
-            <div className={styles.newsFeaturedImage}>
-              <Image 
-                src="/trocacordas.jpeg" 
-                alt="Evento de Batizado e Troca de Cordas 2024" 
-                width={1200} 
-                height={600}
-                className={styles.newsImage}
-              />
-            </div>
-            
-            <div className={styles.newsContent}>
-              <p>Nosso evento anual de Batizado e Troca de Cordas aconteceu em dezembro e foi um grande sucesso! Gostaríamos de agradecer a todos que participaram e contribuíram para tornar este evento incrível e inesquecível.</p>
+              <h1 className={newsStyles.newsTitle}>Batizado e Troca de Cordas 2024</h1>
+              <div className={newsStyles.newsDate}>Publicado em: 15 de Maio de 2024</div>
               
-              <h2>Um momento especial</h2>
-              <p>O Batizado é um dos momentos mais importantes na vida de um capoeirista, representando sua iniciação oficial no mundo da capoeira. Já a Troca de Cordas simboliza a evolução e o progresso técnico do praticante na arte.</p>
-              
-              <p>Durante o evento, tivemos a honra de contar com a presença de mestres renomados de diferentes grupos de capoeira, que compartilharam seu conhecimento e experiência com nossos alunos e convidados.</p>
-              
-              <h2>Destaques do evento</h2>
-              <ul>
-                <li>Cerimônia de Batizado para novos alunos</li>
-                <li>Troca de Cordas para alunos que avançaram de graduação</li>
-                <li>Rodas de capoeira com mestres convidados</li>
-                <li>Apresentações culturais</li>
-                <li>Workshop de movimentos avançados</li>
-                <li>Confraternização entre todos os participantes</li>
-              </ul>
-              
-              <p>Este evento não apenas celebra a evolução técnica dos praticantes, mas também reforça os laços de amizade, respeito e união que são fundamentais na capoeira.</p>
-              
-              <h2>Agradecimentos</h2>
-              <p>Agradecemos a todos os alunos, familiares, mestres convidados e à comunidade em geral pelo apoio e participação. Um agradecimento especial aos patrocinadores e voluntários que tornaram este evento possível.</p>
-              
-              <p>Estamos ansiosos para continuar este trabalho de preservação e difusão da capoeira como arte, cultura e filosofia de vida.</p>
-              
-              <div className={styles.newsGallery}>
-                <h3>Galeria de Fotos</h3>
-                <div className={styles.newsGalleryGrid}>
-                  <div className={styles.galleryItem}>
-                    <Image src="/tribos.jpeg" alt="Roda de Capoeira" width={300} height={200} />
-                  </div>
-                  <div className={styles.galleryItem}>
-                    <Image src="/tribos2.jpeg" alt="Batizado" width={300} height={200} />
-                  </div>
-                  <div className={styles.galleryItem}>
-                    <Image src="/mestres.jpeg" alt="Mestres" width={300} height={200} />
-                  </div>
-                </div>
+              <div className={newsStyles.newsFeaturedImage}>
+                <Image
+                  src="/trocacordas.jpeg"
+                  alt="Batizado e Troca de Cordas 2024"
+                  className={newsStyles.featuredImage}
+                  width={1000}
+                  height={500}
+                  priority
+                  style={{ objectFit: 'cover', objectPosition: '50% 40%' }}
+                />
               </div>
               
-              <div className={styles.newsShare}>
-                <p>Compartilhe:</p>
-                <div className={styles.socialLinks}>
-                  <a href="#" className={styles.socialIcon}>
-                    <i className="fab fa-facebook-f"></i>
+              <div className={newsStyles.newsContent}>
+                <p>
+                  O Grupo Tribos Capoeira tem o prazer de anunciar o nosso evento anual de Batizado e Troca de Cordas 2024, que acontecerá de 20 a 22 de julho em nossa sede principal.
+                </p>
+                <p>
+                  Este evento marca um momento importante para todos os praticantes de capoeira, onde novos membros serão batizados e alunos existentes terão a oportunidade de avançar de graduação com a troca de cordas.
+                </p>
+                <h2>Programação</h2>
+                <p><strong>Dia 20 (Sábado):</strong></p>
+                <ul>
+                  <li>9h - 12h: Workshop com Mestre Canhoto</li>
+                  <li>14h - 17h: Workshop com Mestre Pepeu e Mestre Pernilongo</li>
+                  <li>19h: Roda de abertura</li>
+                </ul>
+                <p><strong>Dia 21 (Domingo):</strong></p>
+                <ul>
+                  <li>9h - 12h: Cerimônia de Batizado</li>
+                  <li>14h - 17h: Troca de Cordas</li>
+                  <li>18h: Celebração e confraternização</li>
+                </ul>
+                <p><strong>Dia 22 (Segunda):</strong></p>
+                <ul>
+                  <li>9h - 12h: Roda de encerramento e despedida dos mestres visitantes</li>
+                </ul>
+                <p>
+                  Não perca esta oportunidade única de participar deste evento especial e celebrar a cultura da capoeira com nossa comunidade. Todos são bem-vindos!
+                </p>
+              </div>
+              
+              <div className={newsStyles.newsShare}>
+                <h3>Compartilhe:</h3>
+                <div className={newsStyles.socialLinks}>
+                  <a href="https://facebook.com/share" target="_blank" rel="noopener noreferrer">
+                    <FaFacebook />
                   </a>
-                  <a href="#" className={styles.socialIcon}>
-                    <i className="fab fa-twitter"></i>
+                  <a href="https://twitter.com/share" target="_blank" rel="noopener noreferrer">
+                    <FaTwitter />
                   </a>
-                  <a href="https://www.instagram.com/tribos_capoeiraoficial/" target="_blank" rel="noopener noreferrer" className={`${styles.socialIcon} ${styles.instagram}`}>
-                    <i className="fab fa-instagram"></i>
+                  <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+                    <FaInstagram />
                   </a>
-                  <a href="#" className={styles.socialIcon}>
-                    <i className="fab fa-whatsapp"></i>
+                  <a href="https://api.whatsapp.com/send?text=Batizado e Troca de Cordas 2024 - Tribos Capoeira" target="_blank" rel="noopener noreferrer">
+                    <FaWhatsapp />
                   </a>
                 </div>
               </div>
               
-              <div className={styles.newsUnidades}>
+              <div className={newsStyles.newsUnidades}>
                 <h3>Nossas Unidades:</h3>
-                <div className={styles.unidadesLinks}>
-                  <a href="https://www.instagram.com/tribos_capoeiraoficial/" target="_blank" rel="noopener noreferrer">
-                    <i className="fab fa-instagram"></i> @tribos_capoeiraoficial
-                  </a>
-                  <a href="https://www.instagram.com/triboscapoeirarj/" target="_blank" rel="noopener noreferrer">
-                    <i className="fab fa-instagram"></i> @triboscapoeirarj
-                  </a>
-                  <a href="https://www.instagram.com/triboscapoeirapara/" target="_blank" rel="noopener noreferrer">
-                    <i className="fab fa-instagram"></i> @triboscapoeirapara
-                  </a>
-                  <a href="https://www.instagram.com/triboscapoeira_dourados/" target="_blank" rel="noopener noreferrer">
-                    <i className="fab fa-instagram"></i> @triboscapoeira_dourados
-                  </a>
-                  <a href="https://www.instagram.com/tribos_capoeira_ao/" target="_blank" rel="noopener noreferrer">
-                    <i className="fab fa-instagram"></i> @tribos_capoeira_ao
-                  </a>
+                <div className={newsStyles.unidadesLinks}>
+                  <a href="https://instagram.com/tribos_capoeiraoficial" target="_blank" rel="noopener noreferrer">@tribos_capoeiraoficial</a>
+                  <a href="https://instagram.com/triboscapoeirarj" target="_blank" rel="noopener noreferrer">@triboscapoeirarj</a>
+                  <a href="https://instagram.com/triboscapoeirapara" target="_blank" rel="noopener noreferrer">@triboscapoeirapara</a>
+                  <a href="https://instagram.com/tribos_capoeira_dourados" target="_blank" rel="noopener noreferrer">@tribos_capoeira_dourados</a>
+                  <a href="https://instagram.com/tribos_capoeira_ao" target="_blank" rel="noopener noreferrer">@tribos_capoeira_ao</a>
                 </div>
               </div>
-              
-              <div className={styles.newsNav}>
-                <div className={styles.newsNavPrev}>
-                  <Link href="/noticias/workshop-mestres">
-                    <span className={styles.newsNavLabel}>Notícia Anterior</span>
-                    <span className={styles.newsNavTitle}>Workshop com Mestres</span>
-                  </Link>
-                </div>
-                <div className={styles.newsNavHome}>
-                  <Link href="/#noticias">
-                    <span className={styles.newsNavHomeIcon}>•••</span>
-                  </Link>
-                </div>
-                <div className={styles.newsNavNext}>
-                  {/* Este é o mais recente, então não há próxima notícia */}
-                </div>
+            </section>
+            
+            {/* Navegação entre notícias */}
+            <div className={newsStyles.newsNav}>
+              <div className={newsStyles.newsNavPrev}>
+                <a href="/noticias/workshop-mestres">
+                  <span className={newsStyles.newsNavLabel}>Notícia Anterior</span>
+                  <span className={newsStyles.newsNavTitle}>Workshop com Mestres</span>
+                </a>
+              </div>
+              <div className={newsStyles.newsNavHome}>
+                <a href="/noticias">
+                  <span className={newsStyles.newsNavHomeIcon}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                      <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                  </span>
+                  <span>Todas as Notícias</span>
+                </a>
+              </div>
+              <div className={newsStyles.newsNavPrev}>
+                <a href="/noticias/encontro-internacional">
+                  <span className={newsStyles.newsNavLabel}>Próxima Notícia</span>
+                  <span className={newsStyles.newsNavTitle}>Encontro Internacional de Capoeira</span>
+                </a>
               </div>
             </div>
           </div>
@@ -189,43 +215,34 @@ export default function BatizadoTrocaCordas() {
         <footer className={styles.footer}>
           <div className="container">
             <div className={styles.footerContent}>
-              <div className={styles.footerColumn}>
-                <h3 className={styles.footerTitle}>Tribos Capoeira</h3>
-                <p>Arte, cultura e tradição brasileira em um grupo comprometido com a preservação e difusão da capoeira.</p>
-              </div>
-              <div className={styles.footerColumn}>
-                <h3 className={styles.footerTitle}>Links Rápidos</h3>
-                <ul className={styles.footerLinks}>
+              <div className={styles.footerSection}>
+                <h3>Links Rápidos</h3>
+                <ul>
+                  <li><Link href="/">Início</Link></li>
                   <li><Link href="/#quem-somos">Quem Somos</Link></li>
                   <li><Link href="/#noticias">Notícias</Link></li>
                   <li><Link href="/#galeria">Galeria</Link></li>
                   <li><Link href="/#contato">Contato</Link></li>
                 </ul>
               </div>
-              <div className={styles.footerColumn}>
-                <h3 className={styles.footerTitle}>Redes Sociais</h3>
+              <div className={styles.footerSection}>
+                <h3>Redes Sociais</h3>
                 <div className={styles.socialLinks}>
-                  <a href="https://www.instagram.com/tribos_capoeiraoficial/" target="_blank" rel="noopener noreferrer" className={`${styles.socialIcon} ${styles.instagram}`}>
-                    <i className="fab fa-instagram"></i>
+                  <a href="https://facebook.com/triboscapoeira" target="_blank" rel="noopener noreferrer">
+                    <FaFacebook />
                   </a>
-                  <a href="#" className={styles.socialIcon}>
-                    <i className="fab fa-facebook-f"></i>
-                  </a>
-                  <a href="#" className={styles.socialIcon}>
-                    <i className="fab fa-youtube"></i>
-                  </a>
-                  <a href="#" className={styles.socialIcon}>
-                    <i className="fab fa-whatsapp"></i>
+                  <a href="https://instagram.com/tribos_capoeiraoficial" target="_blank" rel="noopener noreferrer">
+                    <FaInstagram />
                   </a>
                 </div>
               </div>
             </div>
             <div className={styles.copyright}>
-              &copy; {new Date().getFullYear()} Tribos Capoeira. Todos os direitos reservados.
+              <p>&copy; 2024 Tribos Capoeira. Todos os direitos reservados.</p>
             </div>
           </div>
         </footer>
       </div>
     </>
   );
-} 
+}

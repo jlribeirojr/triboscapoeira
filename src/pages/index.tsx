@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import styles from "@/styles/Home.module.css";
 import Link from "next/link";
-import { getConfiguracao, getQuemSomosInfo, getContatoInfo, getGaleriaImages } from "@/services/cosmicService";
+import { getConfiguracao, getQuemSomosInfo, getContatoInfo, getGaleriaImages, getFirstNewsData } from "@/services/cosmicService";
 
 // Definindo tipos para os dados do CMS
 interface ConfigData {
@@ -44,12 +44,14 @@ export default function Home() {
   const [windowWidth, setWindowWidth] = useState(0);
   const [imagemSelecionada, setImagemSelecionada] = useState<string | null>(null);
   const [tituloSelecionado, setTituloSelecionado] = useState<string | null>(null);
+  const [indexAtual, setIndexAtual] = useState<number>(-1);
   
   // Estado para dados do CMS com tipos corretos
   const [configData, setConfigData] = useState<ConfigData | null>(null);
   const [quemSomosData, setQuemSomosData] = useState<QuemSomosData | null>(null);
   const [contatoData, setContatoData] = useState<ContatoData | null>(null);
   const [galeriaImages, setGaleriaImages] = useState<GaleriaItem[]>([]);
+  const [firstNewsData, setFirstNewsData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [fundoUrl, setFundoUrl] = useState<string | null>(null);
 
@@ -84,61 +86,58 @@ export default function Home() {
 
   // Efeito para carregar dados do CMS
   useEffect(() => {
-    async function loadCMSData() {
+    const loadConfig = async () => {
+      setLoading(true);
       try {
-        // Carregar dados do CMS
-        const config = await getConfiguracao() as ConfigData;
-        const quemSomos = await getQuemSomosInfo() as QuemSomosData;
-        const contato = await getContatoInfo() as ContatoData;
-        const galeria = await getGaleriaImages() as GaleriaItem[];
-        
-        // Atualizar estados com o tipo correto
-        setConfigData(config || null);
-        setQuemSomosData(quemSomos || null);
-        setContatoData(contato || null);
-        setGaleriaImages(galeria || []);
-        
-        // Verificar e atualizar URL da imagem de fundo
-        if (config?.metadata?.imagem_fundo?.imgix_url) {
-          setFundoUrl(config.metadata.imagem_fundo.imgix_url);
-        } else if (config?.metadata?.imagem_fundo?.url) {
-          setFundoUrl(config.metadata.imagem_fundo.url);
+        const configData = await getConfiguracao();
+        console.log('Dados de configuração recebidos:', configData);
+        if (configData && typeof configData === 'object' && 'metadata' in configData) {
+          setConfigData(configData as ConfigData);
         }
+        
+        const contactData = await getContatoInfo();
+        if (contactData) {
+          setContatoData(contactData);
+        }
+        
+        // Obter especificamente os dados da seção "Quem Somos"
+        const quemSomosInfo = await getQuemSomosInfo();
+        console.log('Dados de Quem Somos recebidos:', quemSomosInfo);
+        if (quemSomosInfo && typeof quemSomosInfo === 'object' && 'quem_somos' in quemSomosInfo) {
+          setQuemSomosData(quemSomosInfo as QuemSomosData);
+        } else {
+          console.error('Dados de Quem Somos não encontrados ou inválidos');
+        }
+        
+        const images = await getGaleriaImages();
+        console.log('Imagens da galeria recebidas:', images);
+        setGaleriaImages(images);
+        
+        const newsData = await getFirstNewsData();
+        console.log('Dados de notícias recebidos:', newsData);
+        setFirstNewsData(newsData);
       } catch (error) {
-        console.error("Erro ao carregar dados do CMS:", error);
+        console.error('Erro ao carregar dados do CMS:', error);
       } finally {
         setLoading(false);
       }
-    }
+    };
     
-    loadCMSData();
+    loadConfig();
   }, []);
 
-  // Função para determinar a altura da imagem com base no tamanho da tela
+  // Funções para obter a altura da imagem com base na largura da tela
   const getImageHeight = () => {
-    if (windowWidth < 576) return "250px";
-    if (windowWidth < 768) return "300px";
-    return "400px";
-  };
-
-  // Se quisermos usar o texto "Quem Somos" do CMS (quando disponível)
-  const renderQuemSomosText = () => {
-    // Se temos dados do CMS e o campo não está vazio, usamos ele
-    if (quemSomosData?.quem_somos && quemSomosData.quem_somos.trim() !== "") {
-      return quemSomosData.quem_somos;
-    }
-    
-    // Caso contrário, usamos o texto padrão
-    return `A Tribos Capoeira é muito mais do que um grupo: somos um movimento cultural e social que 
-      transforma vidas por meio da arte da capoeira. Fundada em Brasília-DF pelo Mestrando Tyson, somos 
-      uma instituição sem fins lucrativos com a missão de preservar, difundir e fortalecer essa manifestação 
-      genuinamente brasileira, unindo tradição, cultura e inclusão.`;
+    if (windowWidth < 576) return '250px';
+    if (windowWidth < 768) return '300px';
+    return '400px';
   };
 
   // Função para abrir o modal com a imagem selecionada
-  const abrirModal = (src: string, titulo?: string) => {
+  const abrirModal = (src: string, titulo?: string, index?: number) => {
     setImagemSelecionada(src);
     setTituloSelecionado(titulo || null);
+    setIndexAtual(index !== undefined ? index : -1);
     // Impedir a rolagem da página quando o modal estiver aberto
     document.body.style.overflow = 'hidden';
   };
@@ -147,17 +146,51 @@ export default function Home() {
   const fecharModal = () => {
     setImagemSelecionada(null);
     setTituloSelecionado(null);
+    setIndexAtual(-1);
     // Reativar a rolagem da página
     document.body.style.overflow = 'auto';
   };
 
-  // Determinar qual classe do Hero usar com base na disponibilidade da imagem de fundo
-  const heroStyle = fundoUrl ? {
-    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${fundoUrl})`,
-    className: styles.heroDynamic
-  } : {
-    className: styles.hero
+  // Funções para navegar entre as imagens
+  const proximaImagem = () => {
+    if (indexAtual >= 0 && galeriaImages.length > 0) {
+      const novoIndex = (indexAtual + 1) % galeriaImages.length;
+      const imagem = galeriaImages[novoIndex];
+      setIndexAtual(novoIndex);
+      setImagemSelecionada(imagem.imgix_url || imagem.url || '');
+      setTituloSelecionado(imagem.titulo || null);
+    }
   };
+
+  const imagemAnterior = () => {
+    if (indexAtual >= 0 && galeriaImages.length > 0) {
+      const novoIndex = (indexAtual - 1 + galeriaImages.length) % galeriaImages.length;
+      const imagem = galeriaImages[novoIndex];
+      setIndexAtual(novoIndex);
+      setImagemSelecionada(imagem.imgix_url || imagem.url || '');
+      setTituloSelecionado(imagem.titulo || null);
+    }
+  };
+  
+  // Adicionar evento de teclado para navegar e fechar o modal
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (imagemSelecionada) {
+        if (e.key === 'Escape') {
+          fecharModal();
+        } else if (e.key === 'ArrowRight') {
+          proximaImagem();
+        } else if (e.key === 'ArrowLeft') {
+          imagemAnterior();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [imagemSelecionada, indexAtual, galeriaImages]);
 
   // Renderiza as imagens da galeria do Cosmic ou usa as imagens padrão
   const renderGaleriaItems = () => {
@@ -168,7 +201,7 @@ export default function Home() {
         const titulo = item.titulo || `Imagem ${index + 1}`;
         
         return (
-          <div className={styles.galleryItem} key={index} onClick={() => abrirModal(imageUrl, titulo)}>
+          <div className={styles.galleryItem} key={index} onClick={() => abrirModal(imageUrl, titulo, index)}>
             <Image
               src={imageUrl}
               alt={titulo}
@@ -188,7 +221,7 @@ export default function Home() {
       // Fallback para as imagens estáticas se não houver imagens no Cosmic
       return (
         <>
-          <div className={styles.galleryItem} onClick={() => abrirModal("/tribos.jpeg", "Grupo Tribos Capoeira em Angola")}>
+          <div className={styles.galleryItem} onClick={() => abrirModal("/tribos.jpeg", "Grupo Tribos Capoeira em Angola", 0)}>
             <Image
               src="/tribos.jpeg"
               alt="Grupo Tribos Capoeira em Angola"
@@ -202,7 +235,7 @@ export default function Home() {
               <span>Grupo Tribos Capoeira em Angola</span>
             </div>
           </div>
-          <div className={styles.galleryItem} onClick={() => abrirModal("/tribos2.jpeg", "Apresentação de Capoeira do Grupo Tribos")}>
+          <div className={styles.galleryItem} onClick={() => abrirModal("/tribos2.jpeg", "Apresentação de Capoeira do Grupo Tribos", 1)}>
             <Image
               src="/tribos2.jpeg"
               alt="Apresentação de Capoeira do Grupo Tribos"
@@ -216,7 +249,7 @@ export default function Home() {
               <span>Apresentação de Capoeira do Grupo Tribos</span>
             </div>
           </div>
-          <div className={styles.galleryItem} onClick={() => abrirModal("/mestrandotyson.jpeg", "Mestrando Tyson")}>
+          <div className={styles.galleryItem} onClick={() => abrirModal("/mestrandotyson.jpeg", "Mestrando Tyson", 2)}>
             <Image
               src="/mestrandotyson.jpeg"
               alt="Mestrando Tyson"
@@ -230,7 +263,7 @@ export default function Home() {
               <span className={styles.galleryIcon}>+</span>
             </div>
           </div>
-          <div className={styles.galleryItem} onClick={() => abrirModal("/graduacao.jpeg", "Cerimônia de Graduação e Entrega de Cordas")}>
+          <div className={styles.galleryItem} onClick={() => abrirModal("/graduacao.jpeg", "Cerimônia de Graduação e Entrega de Cordas", 3)}>
             <Image
               src="/graduacao.jpeg"
               alt="Cerimônia de Graduação e Entrega de Cordas"
@@ -244,7 +277,7 @@ export default function Home() {
               <span>Cerimônia de Graduação e Entrega de Cordas</span>
             </div>
           </div>
-          <div className={styles.galleryItem} onClick={() => abrirModal("/triboskids.jpeg", "Tribos Kids - Aula de Capoeira para Crianças")}>
+          <div className={styles.galleryItem} onClick={() => abrirModal("/triboskids.jpeg", "Tribos Kids - Aula de Capoeira para Crianças", 4)}>
             <Image
               src="/triboskids.jpeg"
               alt="Tribos Kids - Aula de Capoeira para Crianças"
@@ -258,7 +291,7 @@ export default function Home() {
               <span>Tribos Kids - Aula de Capoeira para Crianças</span>
             </div>
           </div>
-          <div className={styles.galleryItem} onClick={() => abrirModal("/evento.jpeg", "Evento de Integração do Grupo Tribos Capoeira")}>
+          <div className={styles.galleryItem} onClick={() => abrirModal("/evento.jpeg", "Evento de Integração do Grupo Tribos Capoeira", 5)}>
             <Image
               src="/evento.jpeg"
               alt="Evento de Integração do Grupo Tribos Capoeira"
@@ -340,8 +373,11 @@ export default function Home() {
 
         {/* Hero Section com imagem dinâmica se disponível */}
         <section 
-          className={heroStyle.className}
-          style={fundoUrl ? { backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${fundoUrl})` } : {}}
+          className={styles.hero}
+          style={fundoUrl ? { 
+            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(${fundoUrl})`,
+            backgroundPosition: 'center 40%'
+          } : {}}
         >
           <div className={styles.heroContent}>
             <div className={styles.heroLogo}>
@@ -382,88 +418,81 @@ export default function Home() {
             <div className="container">
               <h2 className="section-title">Notícias</h2>
               <div className={styles.newsGrid}>
-                <div
-                  className={styles.newsCard}
-                  onMouseEnter={() => setHoverCard1(true)}
-                  onMouseLeave={() => setHoverCard1(false)}
-                >
-                  <Link
-                    href="/noticias/batizado-troca-cordas-2024"
-                    className={styles.newsImageContainer}
+                {/* Card 1 - Notícia do CMS */}
+                <Link href="/noticias/comemoracao-3-anos" className={styles.newsCardLink}>
+                  <div 
+                    className={styles.newsCard} 
+                    onMouseEnter={() => setHoverCard1(true)}
+                    onMouseLeave={() => setHoverCard1(false)}
                   >
-                    <Image
-                      src="/trocacordas.jpeg"
-                      alt="Batizado e Troca de Cordas"
-                      fill
-                      priority
-                      sizes="(max-width: 768px) 100vw, 600px"
-                      className={styles.newsImage}
-                    />
-                    <div className={styles.newsImageOverlay}>
-                      Clique para ler mais sobre o Batizado e Troca de Cordas
-                      2024
+                    <div className={styles.newsImageContainer}>
+                      <Image
+                        src={firstNewsData?.imagem || "/tribos.jpeg"}
+                        alt={firstNewsData?.titulo || "Comemoração de 3 anos da Tribos Capoeira"}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        style={{
+                          objectFit: 'cover',
+                          objectPosition: '50% 35%',
+                          transform: hoverCard1 ? 'scale(1.05)' : 'scale(1)',
+                          transition: 'transform 0.5s ease'
+                        }}
+                        className={styles.newsImage}
+                      />
                     </div>
-                  </Link>
-                  <div className={styles.newsContent}>
-                    <div className={styles.newsDate}>15 de Março de 2024</div>
-                    <h3 className={styles.newsTitle}>
-                      Batizado e Troca de Cordas 2024
-                    </h3>
-                    <p className={styles.newsExcerpt}>
-                      Nosso evento anual de Batizado e Troca de Cordas ocorreu
-                      em dezembro, e foi um sucesso. Agradecemos a todos que
-                      participaram e contribuíram para este evento incrível.
-                    </p>
-                    <a
-                      href="/noticias/batizado-troca-cordas-2024"
-                      className={styles.newsLink}
-                    >
-                      Leia mais
-                    </a>
+                    <div className={styles.newsContent}>
+                      <h3>{firstNewsData?.titulo || "Comemoração de 3 anos da Tribos Capoeira"}</h3>
+                      <p>
+                        {firstNewsData?.descricao ? 
+                          firstNewsData.descricao.length > 150 ? 
+                            `${firstNewsData.descricao.substring(0, 150)}...` : 
+                            firstNewsData.descricao
+                          : 
+                          "No último sábado, o Grupo Tribos Capoeira celebrou com muita alegria e energia seus 3 anos de existência, em uma roda especial repleta de axé, música e movimento..."
+                        }
+                      </p>
+                      <span className={styles.btnLeiaMais}>
+                        LEIA MAIS
+                      </span>
+                    </div>
                   </div>
-                </div>
-                <div
-                  className={styles.newsCard}
-                  onMouseEnter={() => setHoverCard2(true)}
-                  onMouseLeave={() => setHoverCard2(false)}
-                >
-                  <Link
-                    href="/noticias/workshop-mestres"
-                    className={styles.newsImageContainer}
+                </Link>
+
+                {/* Card 2 - Notícia do Workshop Internacional (fixa) */}
+                <Link href="/noticias/workshop-mestres" className={styles.newsCardLink}>
+                  <div 
+                    className={styles.newsCard}
+                    onMouseEnter={() => setHoverCard2(true)}
+                    onMouseLeave={() => setHoverCard2(false)}
                   >
-                    <Image
-                      src="/mestres_touro.jpeg"
-                      alt="Mestres com Touro"
-                      fill
-                      priority
-                      sizes="(max-width: 768px) 100vw, 600px"
-                      className={styles.newsImage}
-                      style={{
-                        objectPosition: "50% 35%",
-                      }}
-                    />
-                    <div className={styles.newsImageOverlay}>
-                      Clique para ler mais sobre o Workshop com Mestres
+                    <div className={styles.newsImageContainer}>
+                      <Image
+                        src="/mestres_touro.jpeg"
+                        alt="Workshop Internacional com Mestres"
+                        fill
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        style={{
+                          objectFit: 'cover',
+                          objectPosition: '50% 40%',
+                          transform: hoverCard2 ? 'scale(1.05)' : 'scale(1)',
+                          transition: 'transform 0.5s ease'
+                        }}
+                        className={styles.newsImage}
+                      />
                     </div>
-                  </Link>
-                  <div className={styles.newsContent}>
-                    <div className={styles.newsDate}>
-                      10 de Fevereiro de 2024
+                    <div className={styles.newsContent}>
+                      <h3>Workshop Internacional com Mestres</h3>
+                      <p>
+                        Nos dias 15 e 16 de maio, o Grupo Tribos Capoeira realizará um workshop internacional 
+                        com a presença de mestres renomados da capoeira. Uma oportunidade única para aprender 
+                        com os melhores!
+                      </p>
+                      <span className={styles.btnLeiaMais}>
+                        LEIA MAIS
+                      </span>
                     </div>
-                    <h3 className={styles.newsTitle}>Nossos Mestres</h3>
-                    <p className={styles.newsExcerpt}>
-                      Workshop com mestres Nacionais e Internacionais foi um
-                      sucesso! Agradecemos a todos que participaram e
-                      contribuíram para este evento incrível.
-                    </p>
-                    <a
-                      href="/noticias/workshop-mestres"
-                      className={styles.newsLink}
-                    >
-                      Leia mais
-                    </a>
                   </div>
-                </div>
+                </Link>
               </div>
             </div>
           </section>
@@ -474,35 +503,24 @@ export default function Home() {
               <h2 className="section-title">Quem Somos</h2>
               <div className={styles.aboutContent}>
                 <div className={styles.aboutText}>
-                  <p>{renderQuemSomosText()}</p>
-                  <p>
-                    💪 Com atuação em diversos estados do Brasil e também em Angola, na África, levamos a capoeira a 
-                    comunidades de diferentes realidades, sempre com foco no impacto social, no desenvolvimento 
-                    humano e na formação de novos talentos.
-                  </p>
-                  <p>
-                    🎯 Nossa missão é clara: utilizar a capoeira como uma poderosa ferramenta de transformação social e 
-                    valorização cultural.
-                  </p>
-                  <p>
-                    👥 Nossa Equipe<br />
-                    ✅ Mestre Canhoto – Supervisor Geral e Coordenador no Pará<br />
-                    ✅ Mestrando Tyson – Fundador e Coordenador no Distrito Federal<br />
-                    ✅ Mestrando Bandola – Auxiliar no Distrito Federal<br />
-                    ✅ Contramestre Paulo Quebrado – Coordenador em Marituba, Pará<br />
-                    ✅ Professor Fininho – Coordenador em Dourados, Mato Grosso do Sul<br />
-                    ✅ Instrutor Bruce – Coordenador em Angola, África<br />
-                    ✅ Professor Careca – Coordenador no Rio de Janeiro
-                  </p>
-                  <p>
-                    Seja para se exercitar, fazer parte de uma comunidade vibrante ou se reconectar com as raízes culturais 
-                    do Brasil, a Tribos Capoeira é o seu lugar!
-                  </p>
+                  {quemSomosData?.quem_somos ? (
+                    // Usar o dangerouslySetInnerHTML para renderizar as quebras de linha preservando os emojis
+                    <div dangerouslySetInnerHTML={{ 
+                      __html: quemSomosData.quem_somos
+                        .replace(/\n/g, '<br />')
+                        .replace(/🎯/g, '<span role="img" aria-label="alvo">🎯</span>')
+                        .replace(/👥/g, '<span role="img" aria-label="pessoas">👥</span>')
+                        .replace(/✅/g, '<span role="img" aria-label="check">✅</span>')
+                        .replace(/💪/g, '<span role="img" aria-label="força">💪</span>')
+                    }} />
+                  ) : (
+                    <p>Carregando informações...</p>
+                  )}
                 </div>
                 <div className={styles.aboutImage}>
                   <Image
                     src="/mestrandotyson.jpeg"
-                    alt="Mestrando Tyson"
+                    alt="Mestrando Tyson - Fundador do Grupo Tribos Capoeira"
                     fill
                     priority
                     sizes="(max-width: 768px) 100vw, 50vw"
@@ -666,10 +684,18 @@ export default function Home() {
                     <div>
                       <h3>Onde Estamos</h3>
                       <p>
-                        Endereço - QR 314, S/N Conjunto 8 Loja 2<br />
-                        Samambaia Sul
-                        <br />
-                        Brasília - DF
+                        {contatoData?.endereco ? (
+                          <span dangerouslySetInnerHTML={{ 
+                            __html: contatoData.endereco.replace(/\n/g, '<br />') 
+                          }} />
+                        ) : (
+                          <>
+                            Endereço - QR 314, S/N Conjunto 8 Loja 2<br />
+                            Samambaia Sul
+                            <br />
+                            Brasília - DF
+                          </>
+                        )}
                       </p>
                     </div>
                   </div>
@@ -680,7 +706,9 @@ export default function Home() {
                     <div>
                       <h3>Telefone</h3>
                       <p>
-                        <a href="tel:+5561912345678">(61) 91234-5678</a>
+                        <a href={`tel:${contatoData?.telefone?.replace(/[^0-9+]/g, '') || '+5561912345678'}`}>
+                          {contatoData?.telefone || "(61) 91234-5678"}
+                        </a>
                       </p>
                     </div>
                   </div>
@@ -691,8 +719,8 @@ export default function Home() {
                     <div>
                       <h3>E-mail</h3>
                       <p>
-                        <a href="mailto:triboscapoeiraoficial@gmail.com">
-                          triboscapoeiraoficial@gmail.com
+                        <a href={`mailto:${contatoData?.email || 'triboscapoeiraoficial@gmail.com'}`}>
+                          {contatoData?.email || "triboscapoeiraoficial@gmail.com"}
                         </a>
                       </p>
                     </div>
@@ -758,7 +786,15 @@ export default function Home() {
         <div className={styles.modal} onClick={fecharModal}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <span className={styles.fecharModal} onClick={fecharModal}>&times;</span>
+            <div className={styles.dica}>Pressione ESC para fechar</div>
+            
             {tituloSelecionado && <h3 className={styles.modalTitle}>{tituloSelecionado}</h3>}
+            
+            <div className={styles.modalNavButtons}>
+              <button className={`${styles.navButton} ${styles.prevButton}`} onClick={imagemAnterior}>&lt;</button>
+              <button className={`${styles.navButton} ${styles.nextButton}`} onClick={proximaImagem}>&gt;</button>
+            </div>
+            
             <div className={styles.modalImageContainer}>
               <Image
                 src={imagemSelecionada}
@@ -767,6 +803,10 @@ export default function Home() {
                 className={styles.modalImage}
                 sizes="(max-width: 768px) 100vw, 80vw"
               />
+            </div>
+            
+            <div className={styles.modalCounter}>
+              {indexAtual >= 0 ? `${indexAtual + 1} / ${galeriaImages.length || 6}` : ''}
             </div>
           </div>
         </div>

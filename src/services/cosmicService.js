@@ -48,9 +48,9 @@ const IMAGENS_ESTATICAS = [
   },
   {
     id: "estatica-7",
-    url: "/mestres_touro.jpeg",
-    imgix_url: "/mestres_touro.jpeg",
-    titulo: "Mestres com Touro",
+    url: "/mestres.jpeg",
+    imgix_url: "/mestres.jpeg",
+    titulo: "Mestres",
     descricao: "Mestres do grupo Tribos Capoeira"
   },
   {
@@ -88,26 +88,76 @@ async function verificarConexaoCosmic() {
 }
 
 /**
- * Busca as configurações gerais do site
+ * Busca as configurações gerais do site usando fetch (alternativa)
+ * Esta função é uma alternativa usando fetch diretamente caso o axios tenha problemas
  * @returns {Promise<Object>} Objeto com as configurações do site
  */
+export async function getConfiguracaoFetch() {
+  try {
+    console.log('Buscando configurações do site com fetch...');
+    
+    const url = `https://api.cosmicjs.com/v3/buckets/triboscapoeira-production/objects/67f474cfcbb3fe972a6384d7?pretty=true&read_key=QPaf8PXfywhVJGuFWv9InKSuDZ7q2RPJzagHxDgGuXR0I0pMnA&depth=1&props=slug,title,metadata,type`;
+    console.log(`URL fetch: ${url}`);
+    
+    const response = await fetch(url);
+    
+    if (!response.ok) {
+      throw new Error(`Falha ao buscar configurações: ${response.status} ${response.statusText}`);
+    }
+    
+    const data = await response.json();
+    console.log('Dados recebidos via fetch:', JSON.stringify(data, null, 2));
+    
+    // Verificar se os dados têm a estrutura esperada
+    if (data && data.object && data.object.metadata) {
+      console.log('Dados de configuração extraídos com sucesso via fetch');
+      return data.object;
+    } else {
+      console.warn('Estrutura de dados inesperada na resposta via fetch:', data);
+    }
+    
+    return {};
+  } catch (error) {
+    console.error('Erro ao buscar configurações do site via fetch:', error);
+    return {};
+  }
+}
+
+// Modificar a função getConfiguracao para usar a nova função fetch como fallback
 export async function getConfiguracao() {
   try {
-    // Buscar do Cosmic, mas com fallback para dados estáticos
-    const response = await axios.get(
-      `${API_URL}/objects/67f474cfcbb3fe972a6384d7?read_key=${READ_KEY}&depth=1&props=slug,title,metadata,type`
-    );
-    return response.data.object;
-  } catch (error) {
-    console.log('Usando configurações estáticas (fallback)');
-    return {
-      metadata: {
-        contato: {},
-        quem_somos: {},
-        nossas_unidades: {},
-        noticias: {}
+    console.log('Buscando configurações do site com axios...');
+    
+    // Log da URL completa para verificação
+    console.log(`URL da API: ${API_URL}/objects/67f474cfcbb3fe972a6384d7?read_key=${READ_KEY}&depth=1&props=slug,title,metadata,type`);
+    
+    try {
+      const response = await axios.get(
+        `${API_URL}/objects/67f474cfcbb3fe972a6384d7?read_key=${READ_KEY}&depth=1&props=slug,title,metadata,type`
+      );
+      
+      // Exibir resposta bruta para verificar exatamente o formato dos dados
+      console.log('Estrutura bruta da resposta:', Object.keys(response));
+      console.log('Estrutura bruta dos dados:', Object.keys(response.data || {}));
+      console.log('Resposta da API Cosmic (configuração):', JSON.stringify(response.data, null, 2));
+      
+      // Verificar se os dados têm a estrutura esperada
+      if (response.data && response.data.object && response.data.object.metadata) {
+        console.log('Dados de configuração extraídos com sucesso via axios');
+        return response.data.object;
+      } else {
+        console.warn('Estrutura de dados inesperada na resposta via axios:', response.data);
+        console.log('Tentando método fetch alternativo...');
+        return await getConfiguracaoFetch();
       }
-    };
+    } catch (axiosError) {
+      console.error('Erro ao buscar configurações via axios:', axiosError);
+      console.log('Tentando método fetch alternativo...');
+      return await getConfiguracaoFetch();
+    }
+  } catch (error) {
+    console.error('Erro ao buscar configurações do site:', error);
+    return {};
   }
 }
 
@@ -179,8 +229,16 @@ export async function getImagens(skipCache = false) {
  */
 export async function getContatoInfo() {
   try {
+    console.log('Buscando informações de contato...');
     const config = await getConfiguracao();
-    return config?.metadata?.contato || {};
+    
+    console.log('Dados de configuração para Contato:', JSON.stringify(config?.metadata?.contato || {}, null, 2));
+    
+    if (config && config.metadata && config.metadata.contato) {
+      return config.metadata.contato;
+    }
+    
+    return {};
   } catch (error) {
     console.error('Erro ao buscar informações de contato:', error);
     return {};
@@ -193,11 +251,32 @@ export async function getContatoInfo() {
  */
 export async function getQuemSomosInfo() {
   try {
-    const config = await getConfiguracao();
-    return config?.metadata?.quem_somos || {};
+    console.log('Buscando informações de Quem Somos...');
+    const config = await getConfiguracaoFetch(); // Usar diretamente fetch para garantir
+    
+    console.log('Dados brutos recebidos para Quem Somos:', config);
+    console.log('Estrutura de metadata:', config?.metadata ? Object.keys(config.metadata) : 'metadata não encontrado');
+    console.log('Estrutura de quem_somos:', config?.metadata?.quem_somos ? Object.keys(config.metadata.quem_somos) : 'quem_somos não encontrado');
+    console.log('Dados de configuração para Quem Somos:', JSON.stringify(config?.metadata?.quem_somos || {}, null, 2));
+    
+    // Verifica se os dados têm a estrutura esperada e retorna apenas o texto puro
+    if (config && config.metadata && config.metadata.quem_somos) {
+      // Texto completo para verificação
+      const textoCompleto = config.metadata.quem_somos.quem_somos;
+      console.log('Texto de Quem Somos encontrado:', textoCompleto ? 'sim, com ' + textoCompleto.length + ' caracteres' : 'não encontrado');
+      
+      // Retorna diretamente o texto do Cosmic
+      return {
+        quem_somos: textoCompleto || ""
+      };
+    } else {
+      console.warn('Estrutura esperada para "quem_somos" não encontrada nos dados do CMS');
+    }
+    
+    return { quem_somos: "" };
   } catch (error) {
     console.error('Erro ao buscar informações de Quem Somos:', error);
-    return {};
+    return { quem_somos: "" };
   }
 }
 
@@ -207,8 +286,16 @@ export async function getQuemSomosInfo() {
  */
 export async function getUnidadesInfo() {
   try {
+    console.log('Buscando informações das unidades...');
     const config = await getConfiguracao();
-    return config?.metadata?.nossas_unidades || {};
+    
+    console.log('Dados de configuração para Unidades:', JSON.stringify(config?.metadata?.nossas_unidades || {}, null, 2));
+    
+    if (config && config.metadata && config.metadata.nossas_unidades) {
+      return config.metadata.nossas_unidades;
+    }
+    
+    return {};
   } catch (error) {
     console.error('Erro ao buscar informações das unidades:', error);
     return {};
@@ -231,22 +318,20 @@ export async function getNoticiasInfo() {
 
 export async function getGaleriaImages() {
   try {
-    const response = await fetch(
-      `https://api.cosmicjs.com/v3/buckets/triboscapoeira-production/objects/67f474e0cbb3fe972a6384d9?pretty=true&read_key=QPaf8PXfywhVJGuFWv9InKSuDZ7q2RPJzagHxDgGuXR0I0pMnA&depth=1&props=slug,title,metadata,type`
+    console.log('Buscando imagens da galeria...');
+    
+    const response = await axios.get(
+      `${API_URL}/objects/67f474e0cbb3fe972a6384d9?read_key=${READ_KEY}&depth=1&props=slug,title,metadata,type`
     );
     
-    if (!response.ok) {
-      throw new Error('Falha ao buscar imagens da galeria');
-    }
-    
-    const data = await response.json();
+    console.log('Resposta da API Cosmic (galeria):', response.status);
     
     // Array para armazenar as imagens do Cosmic
     let imagensDoCosmic = [];
     
     // Verificar a estrutura de dados retornada pelo Cosmic
-    if (data.object && data.object.metadata) {
-      const metadata = data.object.metadata;
+    if (response.data && response.data.object && response.data.object.metadata) {
+      const metadata = response.data.object.metadata;
       
       // Nova estrutura: array de objetos com "imagem" e "descricao_da_foto"
       if (metadata.imagem && Array.isArray(metadata.imagem)) {
@@ -274,7 +359,7 @@ export async function getGaleriaImages() {
         imagensDoCosmic = [{
           url: metadata.imagem.url || '',
           imgix_url: metadata.imagem.imgix_url || metadata.imagem.url || '',
-          titulo: metadata.descricao_da_foto || data.object.title || 'Imagem da Galeria',
+          titulo: metadata.descricao_da_foto || response.data.object.title || 'Imagem da Galeria',
           descricao: ''
         }];
       }
@@ -308,5 +393,55 @@ export async function getGaleriaImages() {
       titulo: img.titulo,
       descricao: img.descricao
     }));
+  }
+}
+
+// Função para obter os dados da primeira notícia
+export async function getFirstNewsData() {
+  try {
+    console.log('Buscando dados da primeira notícia...');
+    const config = await getConfiguracao();
+    
+    console.log('Dados de configuração para notícias:', JSON.stringify(config?.metadata?.noticias || {}, null, 2));
+    
+    // Verificar se temos os dados da notícia atualizada
+    if (config && config.metadata && config.metadata.noticias) {
+      const noticiasData = config.metadata.noticias;
+      
+      // Log detalhado da estrutura de dados de notícias para verificar
+      console.log('Estrutura detalhada da notícia:', {
+        temImagem: !!noticiasData.imagem_da_noticia,
+        imagemUrl: noticiasData.imagem_da_noticia?.url,
+        imagemImgixUrl: noticiasData.imagem_da_noticia?.imgix_url,
+        titulo: noticiasData.titulo_da_noticia,
+        descricao: noticiasData.descricao_da_noticia
+      });
+      
+      // Construir o objeto com os dados da notícia
+      const newsResult = {
+        imagem: noticiasData.imagem_da_noticia?.imgix_url || noticiasData.imagem_da_noticia?.url || '',
+        titulo: noticiasData.titulo_da_noticia || 'Comemoração de 3 anos da Tribos Capoeira',
+        descricao: noticiasData.descricao_da_noticia || ''
+      };
+      
+      console.log('Retornando dados de notícia do CMS:', newsResult);
+      return newsResult;
+    } else {
+      console.log('Nenhum dado de notícia encontrado no CMS, usando dados padrão');
+    }
+    
+    // Retorna dados padrão se não houver dados no Cosmic - ATUALIZADO para Comemoração de 3 anos
+    return {
+      imagem: 'https://imgix.cosmicjs.com/702a1e70-18ae-11f0-adcb-894bf25a5bd9-WhatsApp-Image-2025-04-12-at-12-43-29.jpeg',
+      titulo: 'Comemoração de 3 anos da Tribos Capoeira',
+      descricao: 'No último sábado, o Grupo Tribos Capoeira celebrou com muita alegria e energia seus 3 anos de existência, em uma roda especial repleta de axé, música e movimento. O evento reuniu alunos, familiares e apaixonados pela arte da capoeira, em um momento de celebração da história construída até aqui.'
+    };
+  } catch (error) {
+    console.error('Erro ao buscar dados da primeira notícia:', error);
+    return {
+      imagem: 'https://imgix.cosmicjs.com/702a1e70-18ae-11f0-adcb-894bf25a5bd9-WhatsApp-Image-2025-04-12-at-12-43-29.jpeg',
+      titulo: 'Comemoração de 3 anos da Tribos Capoeira',
+      descricao: 'No último sábado, o Grupo Tribos Capoeira celebrou com muita alegria e energia seus 3 anos de existência, em uma roda especial repleta de axé, música e movimento. O evento reuniu alunos, familiares e apaixonados pela arte da capoeira, em um momento de celebração da história construída até aqui.'
+    };
   }
 } 
