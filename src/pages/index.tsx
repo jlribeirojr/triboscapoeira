@@ -467,17 +467,12 @@ export default function Home() {
                   >
                     <div className={styles.newsImageContainer}>
                       <Image
-                        src="/mestres_touro.jpeg"
-                        alt="Workshop Internacional com Mestres"
+                        src="/mestres.jpeg"
+                        alt="Nossos Mestres"
+                        className="newsImage"
                         fill
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                        style={{
-                          objectFit: 'cover',
-                          objectPosition: '50% 40%',
-                          transform: hoverCard2 ? 'scale(1.05)' : 'scale(1)',
-                          transition: 'transform 0.5s ease'
-                        }}
-                        className={styles.newsImage}
+                        sizes="(max-width: 768px) 100vw, 600px"
+                        style={{ objectFit: 'cover', objectPosition: '50% 20%' }}
                       />
                     </div>
                     <div className={styles.newsContent}>

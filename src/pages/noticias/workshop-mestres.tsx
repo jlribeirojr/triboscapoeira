@@ -134,8 +134,8 @@ export default function WorkshopMestres() {
                 <p><strong>Dia 15 (Sábado):</strong></p>
                 <ul>
                   <li>9h - 11h: Workshop com Mestre Canhoto - Fundamentos e movimentos básicos</li>
-                  <li>11h - 13h: Workshop com Mestre Pepeu - Sequências e combinações</li>
-                  <li>15h - 17h: Workshop com Mestre Pernilongo - Musicalidade e ritmos</li>
+                  <li>11h - 13h: Workshop com Mestrando Tyson - Sequências e combinações</li>
+                  <li>15h - 17h: Workshop com Contramestre Paulo Quebrado - Musicalidade e ritmos</li>
                   <li>19h: Roda de capoeira com todos os mestres</li>
                 </ul>
                 <p><strong>Dia 16 (Domingo):</strong></p>

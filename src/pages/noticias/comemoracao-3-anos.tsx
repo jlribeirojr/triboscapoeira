@@ -133,11 +133,11 @@ export default function Comemoracao3Anos() {
 
           <div className={newsStyles.newsContent}>
             <p>
-              No último sábado, celebramos com muita alegria o terceiro aniversário da Tribos Capoeira! Foi uma noite especial repleta de energia, música, camaradagem e demonstrações da nossa arte.
+              No último sábado, celebramos com muita alegria o terceiro aniversário da Tribos Capoeira! Foi um dia especial repleta de energia, música, camaradagem e demonstrações da nossa arte.
             </p>
 
             <p>
-              O evento contou com a presença de alunos de todas as unidades da Tribos Capoeira, além de convidados especiais e amigos que vieram prestigiar nossa comemoração. A roda de capoeira foi conduzida pelo Mestre John, fundador da Tribos, que compartilhou palavras inspiradoras sobre a jornada dos últimos três anos.
+              O evento contou com a presença de alunos de todas as unidades da Tribos Capoeira, além de convidados especiais e amigos que vieram prestigiar nossa comemoração. A roda de capoeira teve a participação de Mestre Canhoto, Mestrando Bandola, Contramestre Paulo Quebrado, Professor Fininho, Professor Careca, Instrutor Bruce e muitos convidados. A roda foi conduzida pelo Mestrando Tyson, fundador da Tribos, que compartilhou palavras inspiradoras sobre a jornada dos últimos três anos.
             </p>
 
             <h2>Destaques do evento:</h2>
@@ -145,12 +145,12 @@ export default function Comemoracao3Anos() {
               <li>Apresentação de todos os alunos, desde as crianças até os adultos mais graduados</li>
               <li>Demonstração de movimentos e sequências especiais</li>
               <li>Roda de capoeira animada com participação de todos os presentes</li>
-              <li>Discurso emocionante do Mestre John sobre a trajetória da Tribos Capoeira</li>
+              <li>Discurso emocionante do Mestrando Tyson sobre a trajetória da Tribos Capoeira</li>
               <li>Confraternização com comidas típicas e bolo de aniversário</li>
             </ul>
 
             <p>
-              "Três anos se passaram desde que iniciamos esse projeto com o sonho de difundir a capoeira e formar não apenas capoeiristas, mas cidadãos. Hoje vemos o fruto desse trabalho em cada aluno, em cada conquista, em cada sorriso. A Tribos Capoeira é mais que um grupo, é uma família", declarou Mestre John durante o evento.
+              "Três anos se passaram desde que iniciamos esse projeto com o sonho de difundir a capoeira e formar não apenas capoeiristas, mas cidadãos. Hoje vemos o fruto desse trabalho em cada aluno, em cada conquista, em cada sorriso. A Tribos Capoeira é mais que um grupo, é uma família", declarou Mestrando Tyson durante o evento.
             </p>
 
             <p>

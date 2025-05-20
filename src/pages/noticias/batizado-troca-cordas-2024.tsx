@@ -134,7 +134,7 @@ export default function BatizadoTrocaCordas2024() {
                 <p><strong>Dia 20 (Sábado):</strong></p>
                 <ul>
                   <li>9h - 12h: Workshop com Mestre Canhoto</li>
-                  <li>14h - 17h: Workshop com Mestre Pepeu e Mestre Pernilongo</li>
+                  <li>14h - 17h: Workshop com Mestre Canhoto e Mestrando Bandola</li>
                   <li>19h: Roda de abertura</li>
                 </ul>
                 <p><strong>Dia 21 (Domingo):</strong></p>
