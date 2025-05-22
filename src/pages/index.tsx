@@ -353,9 +353,9 @@ export default function Home() {
                 </a>
               </li>
               <li>
-                <a href="#noticias" onClick={() => setMenuActive(false)}>
+                <Link href="/noticias" onClick={() => setMenuActive(false)}>
                   Notícias
-                </a>
+                </Link>
               </li>
               <li>
                 <a href="#galeria" onClick={() => setMenuActive(false)}>
@@ -613,9 +613,9 @@ export default function Home() {
                       </div>
                     </a>
                     <a
-                      href="https://www.instagram.com/triboscapoeirapara/"
-            target="_blank"
-            rel="noopener noreferrer"
+                      href="https://www.instagram.com/triboscapoeirapa/"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className={styles.unidadeCard}
                     >
                       <div className={styles.unidadeIcon}>
@@ -623,15 +623,15 @@ export default function Home() {
                       </div>
                       <div className={styles.unidadeInfo}>
                         <div className={styles.unidadeHandle}>
-                          @triboscapoeirapara
+                          @triboscapoeirapa
                         </div>
                         <div className={styles.unidadeLocation}>Pará</div>
                       </div>
-          </a>
-          <a
-                      href="https://www.instagram.com/tribos_capoeira_dourados/"
-            target="_blank"
-            rel="noopener noreferrer"
+                    </a>
+                    <a
+                      href="https://www.instagram.com/triboscapoeira_dourados/"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className={styles.unidadeCard}
                     >
                       <div className={styles.unidadeIcon}>
@@ -643,8 +643,8 @@ export default function Home() {
                         </div>
                         <div className={styles.unidadeLocation}>Dourados</div>
                       </div>
-          </a>
-          <a
+                    </a>
+                    <a
                       href="https://www.instagram.com/tribos_capoeira_ao/"
                       target="_blank"
                       rel="noopener noreferrer"

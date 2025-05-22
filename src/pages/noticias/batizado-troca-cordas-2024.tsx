@@ -152,20 +152,18 @@ export default function BatizadoTrocaCordas2024() {
                 </p>
               </div>
               
+              <div style={{ display: 'flex', justifyContent: 'center', margin: '40px 0' }}>
+                <a href="/" className={styles.instagramButton} style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1.1rem' }}>
+                  Voltar à página principal
+                </a>
+              </div>
+              
               <div className={newsStyles.newsShare}>
                 <h3>Compartilhe:</h3>
                 <div className={newsStyles.socialLinks}>
-                  <a href="https://facebook.com/share" target="_blank" rel="noopener noreferrer">
-                    <FaFacebook />
-                  </a>
-                  <a href="https://twitter.com/share" target="_blank" rel="noopener noreferrer">
-                    <FaTwitter />
-                  </a>
-                  <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+                  <a href="https://www.instagram.com/tribos_capoeiraoficial" target="_blank" rel="noopener noreferrer" className={`${newsStyles.socialIcon} ${newsStyles.instagram}`}> 
                     <FaInstagram />
-                  </a>
-                  <a href="https://api.whatsapp.com/send?text=Batizado e Troca de Cordas 2024 - Tribos Capoeira" target="_blank" rel="noopener noreferrer">
-                    <FaWhatsapp />
+                    <span style={{marginLeft: '8px'}}>@tribos_capoeiraoficial</span>
                   </a>
                 </div>
               </div>

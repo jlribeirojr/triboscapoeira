@@ -152,22 +152,10 @@ export default function WorkshopMestres() {
                 </p>
               </div>
               
-              <div className={newsStyles.newsShare}>
-                <h3>Compartilhe:</h3>
-                <div className={newsStyles.socialLinks}>
-                  <a href="https://facebook.com/share" target="_blank" rel="noopener noreferrer" className={newsStyles.socialIcon}>
-                    <FaFacebook />
-                  </a>
-                  <a href="https://twitter.com/share" target="_blank" rel="noopener noreferrer" className={newsStyles.socialIcon}>
-                    <FaTwitter />
-                  </a>
-                  <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className={`${newsStyles.socialIcon} ${newsStyles.instagram}`}>
-                    <FaInstagram />
-                  </a>
-                  <a href="https://api.whatsapp.com/send?text=Workshop com Mestres 2024 - Tribos Capoeira" target="_blank" rel="noopener noreferrer" className={newsStyles.socialIcon}>
-                    <FaWhatsapp />
-                  </a>
-                </div>
+              <div style={{ display: 'flex', justifyContent: 'center', margin: '40px 0' }}>
+                <a href="/" className={styles.instagramButton} style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1.1rem' }}>
+                  Voltar à página principal
+                </a>
               </div>
               
               <div className={newsStyles.newsUnidades}>
