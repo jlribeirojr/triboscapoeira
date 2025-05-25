@@ -43,16 +43,17 @@ export default function NoticiasIndex() {
                 className={styles.logoImage}
               />
             </Link>
+            <Link href="/" className={styles.logoTitleLink} style={{ textDecoration: 'none', marginLeft: 10 }}>
+              <span className={styles.logoTitleText}>
+                <span className={styles.logoTitleWhite}>Tribos&nbsp;</span>
+                <span className={styles.logoTitleOrange}>Capoeira</span>
+              </span>
+            </Link>
           </div>
           <button className={styles.menuButton} onClick={toggleMenu}>
             <i className="fas fa-bars"></i>
           </button>
           <ul className={`${styles.navLinks} ${menuActive ? styles.active : ''}`}>
-            <li>
-              <Link href="/" onClick={() => setMenuActive(false)}>
-                Início
-              </Link>
-            </li>
             <li>
               <Link href="/#quem-somos" onClick={() => setMenuActive(false)}>
                 Quem Somos
@@ -110,7 +111,7 @@ export default function NoticiasIndex() {
                       fill
                       sizes="(max-width: 768px) 100vw, 600px"
                       className={styles.newsImage}
-                      style={{ objectFit: 'cover', objectPosition: '50% 20%' }}
+                      style={{ objectFit: 'contain', objectPosition: 'center', background: '#fff' }}
                     />
                   </div>
                   <div className={styles.newsContent}>

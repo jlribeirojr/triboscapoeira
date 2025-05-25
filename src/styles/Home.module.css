@@ -100,6 +100,40 @@
   font-size: 1.3rem;
 }
 
+.logoTitle {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #fff;
+  margin-left: 18px;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.25);
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.logoTextLink {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.logoTextImage {
+  display: block;
+  height: 60px;
+  width: auto;
+  background: transparent;
+  border: none;
+  object-fit: contain;
+}
+
+@media (max-width: 768px) {
+  .logoTextImage {
+    height: 38px;
+  }
+}
+
 .navLinks {
   display: flex;
   list-style: none;
@@ -363,7 +397,7 @@
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  height: 500px;
+  height: 600px;
   width: 100%;
   display: flex;
   align-items: center;
@@ -813,116 +847,47 @@
   .aboutContent {
     flex-direction: column;
   }
-  
-  .contactContent {
-    flex-direction: column;
-  }
-  
-  .newsImageContainer {
-    height: 400px;
-  }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .menuButton {
     display: block;
+    background: none;
+    color: white;
+    font-size: 2rem;
+    border: none;
+    cursor: pointer;
+    z-index: 1201;
   }
-  
-  .logoImageWrapper {
-    width: 50px;
-    height: 50px;
-  }
-  
-  .logoTextPrimary {
-    font-size: 1.4rem;
-  }
-  
-  .logoTextSecondary {
-    font-size: 1.1rem;
-  }
-  
   .navLinks {
     position: fixed;
     top: var(--header-height);
     left: 0;
-    width: 100%;
-    background-color: var(--accent-color);
+    width: 100vw;
+    background: #111;
     flex-direction: column;
-    padding: 20px;
-    transform: translateY(-100%);
+    align-items: flex-start;
+    padding: 30px 24px 24px 24px;
+    transform: translateY(-120%);
     transition: transform 0.3s ease;
-    z-index: 100;
+    z-index: 1200;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    border-bottom-left-radius: 18px;
+    border-bottom-right-radius: 18px;
+    min-height: 220px;
   }
-  
   .navLinks.active {
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    transform: translateY(0);
   }
-  
   .navLinks li {
-    margin: 15px 0;
-  }
-  
-  .heroLogo {
-    max-width: 450px;
-    margin-bottom: 30px;
-    margin-top: 50px;
-  }
-  
-  .heroTitle {
-    font-size: 2.5rem;
-  }
-  
-  .heroSubtitle {
-    font-size: 1.7rem;
-    margin-bottom: 30px;
-  }
-  
-  .galleryGrid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-  }
-  
-  .hero {
-    background-position: center 40%;
-  }
-  
-  .newsImageContainer {
-    height: 350px;
-  }
-  
-  .newsImage {
-    max-width: 90%;
-    max-height: 90%;
-  }
-
-  .aboutContent {
-    flex-direction: column;
-    gap: 30px;
-  }
-
-  .aboutImage {
-    height: 400px;
+    margin: 18px 0;
     width: 100%;
   }
-
-  .aboutText {
-    padding: 0;
-  }
-
-  .contactContent {
-    padding: 0 20px;
-  }
-  
-  .contactInfoItem {
-    padding: 15px;
-    margin-bottom: 20px;
-  }
-  
-  .contactIcon {
-    font-size: 1.5rem;
-    width: 30px;
-    height: 30px;
-    margin-right: 15px;
+  .navLinks a {
+    font-size: 1.2rem;
+    width: 100%;
+    display: block;
+    padding: 8px 0;
   }
 }
 
@@ -931,68 +896,12 @@
     width: 40px;
     height: 40px;
   }
-  
-  .logoTextPrimary {
-    font-size: 1.2rem;
-  }
-  
-  .logoTextSecondary {
+  .logoTitleText {
     font-size: 1rem;
   }
-  
-  .heroLogo {
-    max-width: 320px;
-    margin-bottom: 25px;
-    margin-top: 40px;
-  }
-  
-  .heroTitle {
-    font-size: 2rem;
-  }
-  
-  .section-title {
-    font-size: 1.8rem;
-  }
-  
-  .galleryGrid {
-    grid-template-columns: repeat(1, 1fr);
-    gap: 15px;
-  }
-  
-  .galleryItem {
-    padding-bottom: 100%;
-  }
-  
-  .newsGrid {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-  
-  .footerContent {
-    flex-direction: column;
-    gap: 40px;
-  }
-  
-  .heroSubtitle {
-    font-size: 1.4rem;
-    margin-bottom: 25px;
-  }
-  
-  .hero {
-    background-position: center 40%;
-  }
-  
-  .newsImageContainer {
-    height: 300px;
-  }
-  
-  .newsImage {
-    max-width: 90%;
-    max-height: 90%;
-  }
-
-  .aboutImage {
-    height: 300px;
+  .navLinks {
+    padding: 20px 10px 10px 10px;
+    min-height: 180px;
   }
 }
 
@@ -1342,4 +1251,45 @@
 .btnLeiaMais:hover {
   background-color: #c1121f;
   transform: translateY(-2px);
+}
+
+.logoTitleLink {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.logoTitleText {
+  font-size: 2rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.25);
+  display: flex;
+  align-items: center;
+}
+
+.logoTitleWhite {
+  color: #fff;
+}
+
+.logoTitleOrange {
+  color: var(--secondary-color, #ff9e00);
+}
+
+@media (max-width: 768px) {
+  .logoTitleText {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .newsGrid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .newsImageContainer {
+    padding-bottom: 60%;
+  }
 }

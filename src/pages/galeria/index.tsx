@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "@/styles/Galeria.module.css";
+import homeStyles from "@/styles/Home.module.css";
 import { getGaleriaImages } from "@/services/cosmicService";
 
 interface GaleriaItem {
@@ -168,36 +169,43 @@ export default function Galeria() {
 
       <div className={styles.page}>
         {/* Header */}
-        <header
-          className={`${styles.header} ${scrolled ? styles.scrolled : ""}`}
-        >
-          <div className={`container ${styles.navbar}`}>
-            <div className={styles.logo}>
-              <Link href="/" className={styles.logoLink}>
-                Tribos Capoeira
+        <header className={`${homeStyles.header} ${scrolled ? homeStyles.scrolled : ""}`}>
+          <div className={`container ${homeStyles.navbar}`}>
+            <div className={homeStyles.logo}>
+              <Link href="/" className={homeStyles.logoImageWrapper}>
+                <Image
+                  src="/logo-tribos.png"
+                  alt="Tribos Capoeira Logo"
+                  width={80}
+                  height={80}
+                  priority
+                  className={homeStyles.logoImage}
+                />
+              </Link>
+              <Link href="/" className={homeStyles.logoTitleLink} style={{ textDecoration: 'none', marginLeft: 10 }}>
+                <span className={homeStyles.logoTitleText}>
+                  <span className={homeStyles.logoTitleWhite}>Tribos&nbsp;</span>
+                  <span className={homeStyles.logoTitleOrange}>Capoeira</span>
+                </span>
               </Link>
             </div>
-            <button className={styles.menuButton} onClick={toggleMenu}>
+            <button className={homeStyles.menuButton} onClick={toggleMenu}>
               <i className="fas fa-bars"></i>
             </button>
-            <ul
-              className={`${styles.navLinks} ${
-                menuActive ? styles.active : ""
-              }`}
-            >
-              <li>
-                <Link href="/" onClick={() => setMenuActive(false)}>
-                  Início
-                </Link>
-              </li>
+            <ul className={`${homeStyles.navLinks} ${menuActive ? homeStyles.active : ""}`}>
               <li>
                 <Link href="/#quem-somos" onClick={() => setMenuActive(false)}>
                   Quem Somos
                 </Link>
               </li>
               <li>
-                <Link href="/#noticias" onClick={() => setMenuActive(false)}>
+                <Link href="/noticias" onClick={() => setMenuActive(false)}>
                   Notícias
+                </Link>
+              </li>
+              <li>
+                <Link href="/#galeria" onClick={() => setMenuActive(false)}>
+                  Galeria
                 </Link>
               </li>
               <li>

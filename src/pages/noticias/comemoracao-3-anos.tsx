@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { FaFacebook, FaTwitter, FaInstagram, FaWhatsapp, FaArrowLeft, FaArrowRight, FaHome } from 'react-icons/fa';
 import styles from '@/styles/Home.module.css';
 import newsStyles from '@/styles/News.module.css';
+import { getFirstNewsData } from '@/services/cosmicService';
 
 // Interface para os dados de notícias
 interface NewsData {
@@ -17,12 +18,7 @@ interface NewsData {
 export default function Comemoracao3Anos() {
   const [scrolled, setScrolled] = useState(false);
   const [menuActive, setMenuActive] = useState(false);
-  const [news, setNews] = useState<NewsData>({
-    title: 'Comemoração de 3 anos da Tribos Capoeira',
-    date: '15 de Abril de 2024',
-    image: 'https://imgix.cosmicjs.com/702a1e70-18ae-11f0-adcb-894bf25a5bd9-WhatsApp-Image-2025-04-12-at-12-43-29.jpeg',
-    content: `No último sábado, celebramos com muita alegria o terceiro aniversário da Tribos Capoeira! Foi um dia especial repleta de energia, música, camaradagem e demonstrações da nossa arte.\nO evento contou com a presença de alunos de todas as unidades da Tribos Capoeira, além de convidados especiais e amigos que vieram prestigiar nossa comemoração. A roda de capoeira teve a participação de Mestre Canhoto, Mestrando Bandola, Contramestre Paulo Quebrado, Professor Fininho, Professor Careca, Instrutor Bruce e muitos convidados. A roda foi conduzida pelo Mestrando Tyson, fundador da Tribos, que compartilhou palavras inspiradoras sobre a jornada dos últimos três anos.\nDestaques do evento:\nApresentação de todos os alunos, desde as crianças até os adultos mais graduados\nDemonstração de movimentos e sequências especiais\nRoda de capoeira animada com participação de todos os presentes\nDiscurso emocionante do Mestrando Tyson sobre a trajetória da Tribos Capoeira\nConfraternização com comidas típicas e bolo de aniversário\n\"Três anos se passaram desde que iniciamos esse projeto com o sonho de difundir a capoeira e formar não apenas capoeiristas, mas cidadãos. Hoje vemos o fruto desse trabalho em cada aluno, em cada conquista, em cada sorriso. A Tribos Capoeira é mais que um grupo, é uma família\", declarou Mestrando Tyson durante o evento.\nAgradecemos a todos que fizeram parte dessa história até aqui e que continuam acreditando e apoiando nosso trabalho. Que venham muitos mais anos de axé, ginga e camaradagem!`
-  });
+  const [news, setNews] = useState<NewsData | null>(null);
   const [loading, setLoading] = useState(true);
 
   // Efeito para detectar scroll
@@ -42,21 +38,26 @@ export default function Comemoracao3Anos() {
     };
   }, []);
 
-  // Simular carregamento de dados do CMS
+  // Buscar dados do Cosmic CMS
   useEffect(() => {
-    // Simulação de carregamento de dados
-    const timer = setTimeout(() => {
+    async function fetchNews() {
+      const data = await getFirstNewsData();
+      setNews({
+        title: data.titulo || 'Comemoração de 3 anos da Tribos Capoeira',
+        date: '15 de Abril de 2024', // Se quiser, pode buscar uma data dinâmica do CMS
+        image: data.imagem,
+        content: data.descricao,
+      });
       setLoading(false);
-    }, 500);
-
-    return () => clearTimeout(timer);
+    }
+    fetchNews();
   }, []);
 
   const toggleMenu = () => {
     setMenuActive(!menuActive);
   };
 
-  if (loading) {
+  if (loading || !news) {
     return <div>Carregando...</div>;
   }
 
@@ -83,29 +84,38 @@ export default function Comemoracao3Anos() {
                 className={styles.logoImage}
               />
             </Link>
+            <Link href="/" className={styles.logoTitleLink} style={{ textDecoration: 'none', marginLeft: 10 }}>
+              <span className={styles.logoTitleText}>
+                <span className={styles.logoTitleWhite}>Tribos&nbsp;</span>
+                <span className={styles.logoTitleOrange}>Capoeira</span>
+              </span>
+            </Link>
           </div>
           <button className={styles.menuButton} onClick={toggleMenu}>
             <i className="fas fa-bars"></i>
           </button>
-          <nav>
-            <ul className={`${styles.navLinks} ${menuActive ? styles.active : ""}`}>
-              <li>
-                <Link href="/">Início</Link>
-              </li>
-              <li>
-                <Link href="/#quem-somos">Quem Somos</Link>
-              </li>
-              <li>
-                <Link href="/#noticias">Notícias</Link>
-              </li>
-              <li>
-                <Link href="/#galeria">Galeria</Link>
-              </li>
-              <li>
-                <Link href="/#contato">Contato</Link>
-              </li>
-            </ul>
-          </nav>
+          <ul className={`${styles.navLinks} ${menuActive ? styles.active : ""}`}> 
+            <li>
+              <Link href="/#quem-somos" onClick={() => setMenuActive(false)}>
+                Quem Somos
+              </Link>
+            </li>
+            <li>
+              <Link href="/noticias" onClick={() => setMenuActive(false)}>
+                Notícias
+              </Link>
+            </li>
+            <li>
+              <Link href="/#galeria" onClick={() => setMenuActive(false)}>
+                Galeria
+              </Link>
+            </li>
+            <li>
+              <Link href="/#contato" onClick={() => setMenuActive(false)}>
+                Contato
+              </Link>
+            </li>
+          </ul>
         </div>
       </header>
 
@@ -147,19 +157,19 @@ export default function Comemoracao3Anos() {
           <div style={{ background: '#fafafa', borderRadius: 12, padding: '24px 16px', margin: '40px 0 0 0', borderLeft: '5px solid #e74c3c' }}>
             <div style={{ fontWeight: 700, color: '#e74c3c', fontSize: '1.3rem', marginBottom: 16 }}>Nossas Unidades:</div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}>
-              <a href="https://instagram.com/tribos_capoeiraoficial" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', background: '#fff', borderRadius: 24, padding: '8px 20px', fontWeight: 500, color: '#222', textDecoration: 'none', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
+              <a href="https://www.instagram.com/tribos_capoeiraoficial/" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', background: '#fff', borderRadius: 24, padding: '8px 20px', fontWeight: 500, color: '#222', textDecoration: 'none', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
                 <i className="fab fa-instagram" style={{ marginRight: 8 }}></i>@tribos_capoeiraoficial
               </a>
-              <a href="https://instagram.com/triboscapoeirarj" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', background: '#fff', borderRadius: 24, padding: '8px 20px', fontWeight: 500, color: '#222', textDecoration: 'none', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
+              <a href="https://www.instagram.com/triboscapoeirarj/" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', background: '#fff', borderRadius: 24, padding: '8px 20px', fontWeight: 500, color: '#222', textDecoration: 'none', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
                 <i className="fab fa-instagram" style={{ marginRight: 8 }}></i>@triboscapoeirarj
               </a>
-              <a href="https://instagram.com/triboscapoeirapa" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', background: '#fff', borderRadius: 24, padding: '8px 20px', fontWeight: 500, color: '#222', textDecoration: 'none', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
+              <a href="https://www.instagram.com/triboscapoeirapa/" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', background: '#fff', borderRadius: 24, padding: '8px 20px', fontWeight: 500, color: '#222', textDecoration: 'none', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
                 <i className="fab fa-instagram" style={{ marginRight: 8 }}></i>@triboscapoeirapa
               </a>
-              <a href="https://instagram.com/tribos_capoeira_dourados" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', background: '#fff', borderRadius: 24, padding: '8px 20px', fontWeight: 500, color: '#222', textDecoration: 'none', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
-                <i className="fab fa-instagram" style={{ marginRight: 8 }}></i>@tribos_capoeira_dourados
+              <a href="https://www.instagram.com/triboscapoeira_dourados/" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', background: '#fff', borderRadius: 24, padding: '8px 20px', fontWeight: 500, color: '#222', textDecoration: 'none', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
+                <i className="fab fa-instagram" style={{ marginRight: 8 }}></i>@triboscapoeira_dourados
               </a>
-              <a href="https://instagram.com/tribos_capoeira_ao" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', background: '#fff', borderRadius: 24, padding: '8px 20px', fontWeight: 500, color: '#222', textDecoration: 'none', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
+              <a href="https://www.instagram.com/tribos_capoeira_ao/" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', background: '#fff', borderRadius: 24, padding: '8px 20px', fontWeight: 500, color: '#222', textDecoration: 'none', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
                 <i className="fab fa-instagram" style={{ marginRight: 8 }}></i>@tribos_capoeira_ao
               </a>
             </div>

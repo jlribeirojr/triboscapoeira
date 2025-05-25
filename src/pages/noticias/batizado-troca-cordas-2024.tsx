@@ -74,29 +74,38 @@ export default function BatizadoTrocaCordas2024() {
                   className={styles.logoImage}
                 />
               </Link>
+              <Link href="/" className={styles.logoTitleLink} style={{ textDecoration: 'none', marginLeft: 10 }}>
+                <span className={styles.logoTitleText}>
+                  <span className={styles.logoTitleWhite}>Tribos&nbsp;</span>
+                  <span className={styles.logoTitleOrange}>Capoeira</span>
+                </span>
+              </Link>
             </div>
             <button className={styles.menuButton} onClick={toggleMenu}>
               <i className="fas fa-bars"></i>
             </button>
-            <nav>
-              <ul className={`${styles.navLinks} ${menuActive ? styles.active : ""}`}>
-                <li>
-                  <Link href="/">Início</Link>
-                </li>
-                <li>
-                  <Link href="/#quem-somos">Quem Somos</Link>
-                </li>
-                <li>
-                  <Link href="/#noticias">Notícias</Link>
-                </li>
-                <li>
-                  <Link href="/#galeria">Galeria</Link>
-                </li>
-                <li>
-                  <Link href="/#contato">Contato</Link>
-                </li>
-              </ul>
-            </nav>
+            <ul className={`${styles.navLinks} ${menuActive ? styles.active : ""}`}> 
+              <li>
+                <Link href="/#quem-somos" onClick={() => setMenuActive(false)}>
+                  Quem Somos
+                </Link>
+              </li>
+              <li>
+                <Link href="/noticias" onClick={() => setMenuActive(false)}>
+                  Notícias
+                </Link>
+              </li>
+              <li>
+                <Link href="/#galeria" onClick={() => setMenuActive(false)}>
+                  Galeria
+                </Link>
+              </li>
+              <li>
+                <Link href="/#contato" onClick={() => setMenuActive(false)}>
+                  Contato
+                </Link>
+              </li>
+            </ul>
           </div>
         </header>
 
@@ -173,7 +182,7 @@ export default function BatizadoTrocaCordas2024() {
                 <div className={newsStyles.unidadesLinks}>
                   <a href="https://instagram.com/tribos_capoeiraoficial" target="_blank" rel="noopener noreferrer">@tribos_capoeiraoficial</a>
                   <a href="https://instagram.com/triboscapoeirarj" target="_blank" rel="noopener noreferrer">@triboscapoeirarj</a>
-                  <a href="https://instagram.com/triboscapoeirapara" target="_blank" rel="noopener noreferrer">@triboscapoeirapara</a>
+                  <a href="https://www.instagram.com/triboscapoeirapa/" target="_blank" rel="noopener noreferrer">@triboscapoeirapa</a>
                   <a href="https://instagram.com/tribos_capoeira_dourados" target="_blank" rel="noopener noreferrer">@tribos_capoeira_dourados</a>
                   <a href="https://instagram.com/tribos_capoeira_ao" target="_blank" rel="noopener noreferrer">@tribos_capoeira_ao</a>
                 </div>

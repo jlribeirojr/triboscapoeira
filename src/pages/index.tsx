@@ -313,7 +313,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Tribos Capoeira - Grupo de Capoeira</title>
+        <title>Tribos Capoeira</title>
         <meta
           name="description"
           content="Site oficial do grupo Tribos Capoeira. Conheça nossa história, eventos, galeria de fotos e entre em contato."
@@ -329,15 +329,21 @@ export default function Home() {
           <div className={`container ${styles.navbar}`}>
             <div className={styles.logo}>
               <Link href="/" className={styles.logoImageWrapper}>
-          <Image
+                <Image
                   src="/logo-tribos.png"
                   alt="Tribos Capoeira Logo"
                   width={80}
                   height={80}
-            priority
+                  priority
                   className={styles.logoImage}
                 />
               </Link>
+              <Link href="/" className={styles.logoTitleLink} style={{ textDecoration: 'none', marginLeft: 10 }}>
+  <span className={styles.logoTitleText}>
+    <span className={styles.logoTitleWhite}>Tribos&nbsp;</span>
+    <span className={styles.logoTitleOrange}>Capoeira</span>
+  </span>
+</Link>
             </div>
             <button className={styles.menuButton} onClick={toggleMenu}>
               <i className="fas fa-bars"></i>
@@ -544,7 +550,7 @@ export default function Home() {
           {/* Instagram */}
           <section className={`${styles.instagram} section`}>
             <div className="container">
-              <h2 className="section-title">Instagram</h2>
+              <h2 className="section-title" style={{ color: '#fff' }}>Instagram</h2>
               <div className={styles.instagramContent}>
                 <div className={styles.instagramMain}>
                   <div className={styles.instagramIcon}>
@@ -569,7 +575,7 @@ export default function Home() {
                 </div>
 
                 <div className={styles.unidadesSection}>
-                  <h2 className="section-title">Nossas Unidades</h2>
+                  <h2 className="section-title" style={{ color: '#fff' }}>Nossas Unidades</h2>
                   <p>
                     O Grupo Tribos Capoeira está presente em diversos estados e
                     países. Siga nossas redes sociais e conheça mais sobre nosso
@@ -622,9 +628,7 @@ export default function Home() {
                         <i className="fab fa-instagram"></i>
                       </div>
                       <div className={styles.unidadeInfo}>
-                        <div className={styles.unidadeHandle}>
-                          @triboscapoeirapa
-                        </div>
+                        <div className={styles.unidadeHandle}>@triboscapoeirapa</div>
                         <div className={styles.unidadeLocation}>Pará</div>
                       </div>
                     </a>
@@ -638,9 +642,7 @@ export default function Home() {
                         <i className="fab fa-instagram"></i>
                       </div>
                       <div className={styles.unidadeInfo}>
-                        <div className={styles.unidadeHandle}>
-                          @triboscapoeira_dourados
-                        </div>
+                        <div className={styles.unidadeHandle}>@triboscapoeira_dourados</div>
                         <div className={styles.unidadeLocation}>Dourados</div>
                       </div>
                     </a>
