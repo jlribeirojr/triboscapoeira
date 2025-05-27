@@ -202,6 +202,7 @@
   margin-bottom: 40px;
   font-weight: 700;
   text-transform: uppercase;
+  margin-top: 90px;
 }
 
 .galeriaGrid {
@@ -1306,6 +1307,7 @@
 .pageTitle {
   text-align: center;
   margin-bottom: 30px;
+  margin-top: 30px;
   color: #333;
   font-size: 2.5rem;
 }

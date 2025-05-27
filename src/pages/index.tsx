@@ -329,12 +329,12 @@ export default function Home() {
           <div className={`container ${styles.navbar}`}>
             <div className={styles.logo}>
               <Link href="/" className={styles.logoImageWrapper}>
-                <Image
+          <Image
                   src="/logo-tribos.png"
                   alt="Tribos Capoeira Logo"
                   width={80}
                   height={80}
-                  priority
+            priority
                   className={styles.logoImage}
                 />
               </Link>
@@ -620,8 +620,8 @@ export default function Home() {
                     </a>
                     <a
                       href="https://www.instagram.com/triboscapoeirapa/"
-                      target="_blank"
-                      rel="noopener noreferrer"
+            target="_blank"
+            rel="noopener noreferrer"
                       className={styles.unidadeCard}
                     >
                       <div className={styles.unidadeIcon}>
@@ -631,11 +631,11 @@ export default function Home() {
                         <div className={styles.unidadeHandle}>@triboscapoeirapa</div>
                         <div className={styles.unidadeLocation}>Pará</div>
                       </div>
-                    </a>
-                    <a
+          </a>
+          <a
                       href="https://www.instagram.com/triboscapoeira_dourados/"
-                      target="_blank"
-                      rel="noopener noreferrer"
+            target="_blank"
+            rel="noopener noreferrer"
                       className={styles.unidadeCard}
                     >
                       <div className={styles.unidadeIcon}>
@@ -645,8 +645,8 @@ export default function Home() {
                         <div className={styles.unidadeHandle}>@triboscapoeira_dourados</div>
                         <div className={styles.unidadeLocation}>Dourados</div>
                       </div>
-                    </a>
-                    <a
+          </a>
+          <a
                       href="https://www.instagram.com/tribos_capoeira_ao/"
                       target="_blank"
                       rel="noopener noreferrer"
