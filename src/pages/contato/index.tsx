@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { useState, useEffect } from "react";
-import styles from "@/styles/Contato.module.css";
+import styles from '@/styles/Contato.module.css';
 import Link from "next/link";
 import { getContatoInfo } from "@/services/cosmicService";
 
