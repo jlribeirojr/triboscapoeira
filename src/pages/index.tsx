@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import styles from "@/styles/Home.module.css";
 import Link from "next/link";
-import { getConfiguracao, getQuemSomosInfo, getContatoInfo, getGaleriaImages, getFirstNewsData } from "@/services/cosmicService";
+import { getConfiguracao, getQuemSomosInfo, getContatoInfo, getGaleriaImages, getFirstNewsData, getUnidadesInfo } from "@/services/cosmicService";
 
 // Definindo tipos para os dados do CMS
 interface ConfigData {
@@ -21,6 +21,13 @@ interface ConfigData {
 
 interface QuemSomosData {
   quem_somos?: string;
+}
+
+interface UnidadeData {
+  nome_da_unidade: string;
+  instagram_da_unidade: string;
+  endereco: string;
+  telefone: string;
 }
 
 interface ContatoData {
@@ -52,6 +59,7 @@ export default function Home() {
   const [contatoData, setContatoData] = useState<ContatoData | null>(null);
   const [galeriaImages, setGaleriaImages] = useState<GaleriaItem[]>([]);
   const [firstNewsData, setFirstNewsData] = useState<any>(null);
+  const [unidadesData, setUnidadesData] = useState<UnidadeData[]>([]);
   const [loading, setLoading] = useState(true);
   const [fundoUrl, setFundoUrl] = useState<string | null>(null);
 
@@ -116,6 +124,10 @@ export default function Home() {
         const newsData = await getFirstNewsData();
         console.log('Dados de notícias recebidos:', newsData);
         setFirstNewsData(newsData);
+        
+        const unidadesData = await getUnidadesInfo();
+        console.log('Dados das unidades recebidos:', unidadesData);
+        setUnidadesData(unidadesData);
       } catch (error) {
         console.error('Erro ao carregar dados do CMS:', error);
       } finally {
@@ -566,8 +578,8 @@ export default function Home() {
                   </p>
                   <a
                     href="https://www.instagram.com/tribos_capoeiraoficial/"
-                    target="_blank"
-                    rel="noopener noreferrer"
+            target="_blank"
+            rel="noopener noreferrer"
                     className={styles.instagramButton}
                   >
                     Seguir
@@ -582,86 +594,57 @@ export default function Home() {
                     trabalho.
                   </p>
                   <div className={styles.unidadesGrid}>
-                    <a
-                      href="https://www.instagram.com/tribos_capoeiraoficial/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={styles.unidadeCard}
-                    >
-                      <div className={styles.unidadeIcon}>
-                        <i className="fab fa-instagram"></i>
-                      </div>
-                      <div className={styles.unidadeInfo}>
-                        <div className={styles.unidadeHandle}>
-                          @tribos_capoeiraoficial
-                        </div>
-                        <div className={styles.unidadeLocation}>
-                          Página Oficial
-                        </div>
-                      </div>
-                    </a>
-                    <a
-                      href="https://www.instagram.com/triboscapoeirarj/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={styles.unidadeCard}
-                    >
-                      <div className={styles.unidadeIcon}>
-                        <i className="fab fa-instagram"></i>
-                      </div>
-                      <div className={styles.unidadeInfo}>
-                        <div className={styles.unidadeHandle}>
-                          @triboscapoeirarj
-                        </div>
-                        <div className={styles.unidadeLocation}>
-                          Rio de Janeiro
-                        </div>
-                      </div>
-                    </a>
-                    <a
-                      href="https://www.instagram.com/triboscapoeirapa/"
+                    {unidadesData.map((unidade, index) => {
+                      // Verificar se a unidade é válida
+                      if (!unidade || typeof unidade !== 'object') {
+                        return null;
+                      }
+                      
+                      // Extrair o handle do Instagram da URL de forma mais robusta
+                      let instagramHandle = '';
+                      
+                      if (unidade.instagram_da_unidade) {
+                        // Remove protocolo e www
+                        const cleanUrl = unidade.instagram_da_unidade
+                          .replace(/^https?:\/\//, '')
+                          .replace(/^www\./, '')
+                          .replace(/\/$/, ''); // Remove barra final
+                        
+                        // Extrai o nome do usuário
+                        const parts = cleanUrl.split('/');
+                        if (parts.length >= 2) {
+                          instagramHandle = parts[1]; // Parte após instagram.com/
+                        } else {
+                          instagramHandle = parts[0]; // Se não tem barra, usa tudo
+                        }
+                      } else {
+                        // Fallback para o nome da unidade com verificação de segurança
+                        const nomeUnidade = unidade.nome_da_unidade || 'Unidade';
+                        instagramHandle = nomeUnidade.toLowerCase().replace(/\s+/g, '');
+                      }
+                      
+                      return (
+                        <a
+                          key={index}
+                          href={unidade.instagram_da_unidade || "#"}
             target="_blank"
             rel="noopener noreferrer"
-                      className={styles.unidadeCard}
-                    >
-                      <div className={styles.unidadeIcon}>
-                        <i className="fab fa-instagram"></i>
-                      </div>
-                      <div className={styles.unidadeInfo}>
-                        <div className={styles.unidadeHandle}>@triboscapoeirapa</div>
-                        <div className={styles.unidadeLocation}>Pará</div>
-                      </div>
-          </a>
-          <a
-                      href="https://www.instagram.com/triboscapoeira_dourados/"
-            target="_blank"
-            rel="noopener noreferrer"
-                      className={styles.unidadeCard}
-                    >
-                      <div className={styles.unidadeIcon}>
-                        <i className="fab fa-instagram"></i>
-                      </div>
-                      <div className={styles.unidadeInfo}>
-                        <div className={styles.unidadeHandle}>@triboscapoeira_dourados</div>
-                        <div className={styles.unidadeLocation}>Dourados</div>
-                      </div>
-          </a>
-          <a
-                      href="https://www.instagram.com/tribos_capoeira_ao/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={styles.unidadeCard}
-                    >
-                      <div className={styles.unidadeIcon}>
-                        <i className="fab fa-instagram"></i>
-                      </div>
-                      <div className={styles.unidadeInfo}>
-                        <div className={styles.unidadeHandle}>
-                          @tribos_capoeira_ao
-                        </div>
-                        <div className={styles.unidadeLocation}>Angola</div>
-                      </div>
-                    </a>
+                          className={styles.unidadeCard}
+                        >
+                          <div className={styles.unidadeIcon}>
+                            <i className="fab fa-instagram"></i>
+                          </div>
+                          <div className={styles.unidadeInfo}>
+                            <div className={styles.unidadeHandle}>
+                              @{instagramHandle}
+                            </div>
+                            <div className={styles.unidadeLocation}>
+                              {unidade.nome_da_unidade || 'Unidade'}
+                            </div>
+                          </div>
+                        </a>
+                      );
+                    })}
                   </div>
                 </div>
               </div>

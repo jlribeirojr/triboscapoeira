@@ -282,7 +282,7 @@ export async function getQuemSomosInfo() {
 
 /**
  * Busca as informações das unidades
- * @returns {Promise<Object>} Objeto com as informações das unidades
+ * @returns {Promise<Array>} Array com as informações das unidades
  */
 export async function getUnidadesInfo() {
   try {
@@ -291,14 +291,132 @@ export async function getUnidadesInfo() {
     
     console.log('Dados de configuração para Unidades:', JSON.stringify(config?.metadata?.nossas_unidades || {}, null, 2));
     
+    // Unidades originais que sempre devem aparecer
+    const unidadesOriginais = [
+      {
+        nome_da_unidade: "Página Oficial",
+        instagram_da_unidade: "https://www.instagram.com/tribos_capoeiraoficial/",
+        endereco: "Página Oficial",
+        telefone: ""
+      },
+      {
+        nome_da_unidade: "Rio de Janeiro",
+        instagram_da_unidade: "https://www.instagram.com/triboscapoeirarj/",
+        endereco: "Rio de Janeiro - RJ",
+        telefone: ""
+      },
+      {
+        nome_da_unidade: "Pará",
+        instagram_da_unidade: "https://www.instagram.com/triboscapoeirapa/",
+        endereco: "Pará - PA",
+        telefone: ""
+      },
+      {
+        nome_da_unidade: "Dourados",
+        instagram_da_unidade: "https://www.instagram.com/triboscapoeira_dourados/",
+        endereco: "Dourados - MS",
+        telefone: ""
+      },
+      {
+        nome_da_unidade: "Angola",
+        instagram_da_unidade: "https://www.instagram.com/tribos_capoeira_ao/",
+        endereco: "Angola",
+        telefone: ""
+      }
+    ];
+
+    // Verifica se há unidades adicionais no CosmicJS
     if (config && config.metadata && config.metadata.nossas_unidades) {
-      return config.metadata.nossas_unidades;
+      const unidadesCosmic = config.metadata.nossas_unidades;
+      
+      // Se é um array, adiciona às unidades originais
+      if (Array.isArray(unidadesCosmic)) {
+        return [...unidadesOriginais, ...unidadesCosmic];
+      }
+      
+      // Se é um objeto único, verifica se tem dados válidos antes de adicionar
+      if (typeof unidadesCosmic === 'object' && unidadesCosmic !== null) {
+        // Verifica se tem pelo menos nome_da_unidade preenchido
+        if (unidadesCosmic.nome_da_unidade && unidadesCosmic.nome_da_unidade.trim() !== '') {
+          return [...unidadesOriginais, unidadesCosmic];
+        }
+      }
     }
     
-    return {};
+    // Verifica também o campo instagram_da_unidade direto (fallback)
+    if (config && config.metadata && config.metadata.instagram_da_unidade) {
+      const instagramUrl = config.metadata.instagram_da_unidade;
+      if (instagramUrl && instagramUrl.trim() !== '' && instagramUrl !== 'https://www.instagram.com/') {
+        // Extrai o nome da unidade do Instagram
+        let nomeUnidade = "Nova Unidade";
+        try {
+          const urlParts = instagramUrl.split('/');
+          const instagramHandle = urlParts[urlParts.length - 1] || urlParts[urlParts.length - 2];
+          if (instagramHandle) {
+            // Converte o handle em nome mais legível
+            nomeUnidade = instagramHandle
+              .replace(/tribos_capoeira_?/gi, '')
+              .replace(/_/g, ' ')
+              .replace(/\b\w/g, l => l.toUpperCase())
+              .trim();
+            
+            // Se ficou vazio, usa o handle original
+            if (!nomeUnidade) {
+              nomeUnidade = instagramHandle;
+            }
+          }
+        } catch (e) {
+          console.log('Erro ao extrair nome do Instagram:', e);
+        }
+        
+        // Cria uma unidade com base no Instagram
+        const novaUnidade = {
+          nome_da_unidade: nomeUnidade,
+          instagram_da_unidade: instagramUrl,
+          endereco: nomeUnidade,
+          telefone: ""
+        };
+        return [...unidadesOriginais, novaUnidade];
+      }
+    }
+    
+    // Retorna apenas as unidades originais se não houver unidades adicionais no CosmicJS
+    return unidadesOriginais;
   } catch (error) {
     console.error('Erro ao buscar informações das unidades:', error);
-    return {};
+    // Em caso de erro, retorna as unidades originais como fallback
+    return [
+      {
+        nome_da_unidade: "Página Oficial",
+        instagram_da_unidade: "https://www.instagram.com/tribos_capoeiraoficial/",
+        endereco: "Página Oficial",
+        telefone: ""
+      },
+      {
+        nome_da_unidade: "Rio de Janeiro",
+        instagram_da_unidade: "https://www.instagram.com/triboscapoeirarj/",
+        endereco: "Rio de Janeiro - RJ",
+        telefone: ""
+      },
+      {
+        nome_da_unidade: "Pará",
+        instagram_da_unidade: "https://www.instagram.com/triboscapoeirapa/",
+        endereco: "Pará - PA",
+        telefone: ""
+      },
+      {
+        nome_da_unidade: "Dourados",
+        instagram_da_unidade: "https://www.instagram.com/triboscapoeira_dourados/",
+        endereco: "Dourados - MS",
+        telefone: ""
+      },
+      {
+        nome_da_unidade: "Angola",
+        instagram_da_unidade: "https://www.instagram.com/tribos_capoeira_ao/",
+        endereco: "Angola",
+        telefone: ""
+      }
+    ];
   }
 }
 

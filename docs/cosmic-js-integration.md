@@ -20,7 +20,7 @@ Metadados:
   - `descricao_da_noticia`: Campo para descrição das notícias
 - `quem_somos`:
   - `quem_somos`: Campo de texto para a seção "Quem Somos"
-- `nossas_unidades`:
+- `nossas_unidades`: Campo repetível (array) com:
   - `nome_da_unidade`: Campo para nome da unidade
   - `endereco`: Campo para endereço da unidade
   - `telefone`: Campo para telefone da unidade
@@ -36,6 +36,39 @@ Metadados:
 
 Metadados:
 - `imagem`: Campo de imagem repetível para a galeria
+
+## Como Configurar o Campo "Nossas Unidades" no CosmicJS
+
+### 1. No Painel do CosmicJS:
+
+1. **Acesse o tipo de objeto "Configuração Geral"**
+   - Clique na engrenagem ao lado de "Configuração Geral" na barra lateral
+   - Ou vá em "Settings" > "Object Types" > "Configuração Geral"
+
+2. **Adicione o campo "Nossas Unidades"**
+   - Clique em "Add Field" ou "Adicionar Campo"
+   - **Nome do campo:** `nossas_unidades`
+   - **Tipo:** Repeatable (Repetível)
+   - **Label:** "Nossas Unidades"
+
+3. **Configure os subcampos dentro de "Nossas Unidades":**
+   - **nome_da_unidade:** Text (Nome da Unidade)
+   - **endereco:** Text (Endereço)
+   - **telefone:** Text (Telefone)
+   - **instagram_da_unidade:** Text (Instagram da Unidade)
+
+4. **Salve as alterações**
+
+### 2. Adicionando Unidades:
+
+1. **Vá para o conteúdo "Configuração Geral"**
+2. **Clique em "Nossas Unidades"**
+3. **Clique em "Add Item" para cada nova unidade**
+4. **Preencha os dados:**
+   - Nome da Unidade: ex. "Rio de Janeiro"
+   - Endereço: ex. "Rio de Janeiro - RJ"
+   - Telefone: ex. "(21) 99999-9999"
+   - Instagram da Unidade: ex. "https://www.instagram.com/triboscapoeirarj/"
 
 ## Implementação Técnica
 
@@ -58,8 +91,42 @@ export async function getConfiguracao() {
     );
     return response.data.object;
   } catch (error) {
-    console.error('Erro ao buscar configuração:', error);
-    return null;
+    console.error('Erro ao buscar configurações:', error);
+    return {};
+  }
+}
+
+// Função para buscar informações das unidades
+export async function getUnidadesInfo() {
+  try {
+    const config = await getConfiguracao();
+    
+    if (config && config.metadata && config.metadata.nossas_unidades) {
+      const unidades = config.metadata.nossas_unidades;
+      
+      // Se é um array, retorna diretamente
+      if (Array.isArray(unidades)) {
+        return unidades;
+      }
+      
+      // Se é um objeto único, converte para array
+      if (typeof unidades === 'object' && unidades !== null) {
+        return [unidades];
+      }
+    }
+    
+    // Retorna unidades padrão se não houver dados no CMS
+    return [
+      {
+        nome_da_unidade: "Página Oficial",
+        instagram_da_unidade: "https://www.instagram.com/tribos_capoeiraoficial/",
+        endereco: "Página Oficial",
+        telefone: ""
+      }
+    ];
+  } catch (error) {
+    console.error('Erro ao buscar informações das unidades:', error);
+    return [];
   }
 }
 
